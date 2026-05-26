@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="w-full max-w-md bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8 text-center transition-colors">
+    
+    <!-- Glowing Success Icon Animation -->
+    <div class="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
+        <div class="absolute inset-0 bg-amcteal/20 dark:bg-amcteal/40 rounded-full blur-xl animate-pulse"></div>
+        <div class="relative w-24 h-24 bg-gradient-to-br from-amcteal to-amcprimary text-white rounded-full flex items-center justify-center shadow-lg">
+            <svg class="w-12 h-12 animate-[bounce_1s_ease-in-out]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+    </div>
+
+    <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">Thank You!</h1>
+    <p class="text-gray-500 dark:text-gray-400 text-md mb-10 leading-relaxed">
+        Your feedback is extremely valuable. Thank you for helping us improve Adventist Medical Center - Bacolod.
+    </p>
+
+    <!-- IT STAFF CONTROLS (Beautiful UI Loop) -->
+    <div class="space-y-3 pt-6 border-t border-gray-200 dark:border-gray-700/50">
+        <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">IT Staff Menu</p>
+        
+        <a href="/dashboard" class="block w-full bg-amcprimary text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-opacity-90 active:scale-95 transition-all">
+            Return to Dashboard
+        </a>
+        
+        <div class="flex gap-3">
+            <a href="/form/out-patient" class="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all text-sm">
+                New OP Form
+            </a>
+            <a href="/form/in-patient" class="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all text-sm">
+                New IP Form
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

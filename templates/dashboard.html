@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w-full max-w-md bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8 transition-colors">
+    <div class="flex justify-between items-center mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
+        <div>
+            <h2 class="text-2xl font-extrabold text-amcprimary dark:text-amcteal">Dashboard</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Hello, <span class="font-bold text-amcorange">{{ username }}</span></p>
+        </div>
+        <a href="/logout" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 px-4 py-2 rounded-lg text-sm font-bold transition-colors">Logout</a>
+    </div>
+    <div class="space-y-4">
+        <a href="/form/out-patient" class="block w-full text-center bg-gradient-to-r from-amcprimary to-[#006093] text-white p-4 rounded-2xl font-bold hover:shadow-lg hover:shadow-amcprimary/40 active:scale-95 transition-all">
+            Generate Out-Patient Form
+        </a>
+        <a href="/form/in-patient" class="block w-full text-center bg-gradient-to-r from-amcteal to-[#00a8b3] text-white p-4 rounded-2xl font-bold hover:shadow-lg hover:shadow-amcteal/40 active:scale-95 transition-all">
+            Generate In-Patient Form
+        </a>
+        
+        <div class="relative py-4">
+            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200 dark:border-gray-700"></div></div>
+            <div class="relative flex justify-center"><span class="bg-white dark:bg-darkcard px-4 text-xs text-gray-400 uppercase tracking-widest">Admin</span></div>
+        </div>
+        
+        <a href="/admin" class="block w-full text-center bg-white/50 dark:bg-gray-800/50 border-2 border-amcorange text-amcorange p-4 rounded-2xl font-bold hover:bg-amcorange/10 active:scale-95 transition-all">
+            View Analytics & Export Data
+        </a>
+    </div>
+</div>
+{% endblock %}
