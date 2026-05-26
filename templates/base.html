@@ -3,94 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AMC-B Patient Feedback</title>
+    <title>AMC-B Feedback</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class', 
             theme: {
                 extend: {
-                    colors: {
-                        amcprimary: '#004b72', 
-                        amcteal: '#00838b',    
-                        amcorange: '#f2a900',  
-                        darkbg: '#0f172a',     
-                        darkcard: '#1e293b'    
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { 
+                        amcprimary: '#004b72', amcteal: '#00838b', amcorange: '#f2a900', 
+                        darkbg: '#0f172a', /* Lighter Dark Mode (Slate-900) */
+                        darkcard: '#1e293b' /* Lighter Card (Slate-800) */
                     },
                     animation: {
-                        'blob': 'blob 7s infinite',
-                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards'
+                        'slide-down': 'slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
-                        },
-                        fadeInUp: {
-                            '0%': { opacity: 0, transform: 'translateY(20px)' },
-                            '100%': { opacity: 1, transform: 'translateY(0)' }
-                        }
+                        slideDown: { '0%': { opacity: 0, transform: 'translateY(-100%)' }, '100%': { opacity: 1, transform: 'translateY(0)' } }
                     }
                 }
             }
         }
-
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
         }
     </script>
     <style>
         * { -webkit-tap-highlight-color: transparent; }
         body { transition: background-color 0.3s ease, color 0.3s ease; }
-        /* Hide scrollbar for cleaner look, but keep functionality */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        /* Glassmorphism Panels */
+        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+        .dark .glass-panel { background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        
+        /* Premium Buttons */
+        .btn-premium { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-premium:active { transform: scale(0.96); box-shadow: inset 0 4px 6px rgba(0,0,0,0.2); }
+
+        /* Modern Grid Background */
+        .bg-grid { background-image: radial-gradient(rgba(0, 75, 114, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+        .dark .bg-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
+
+        /* Pure CSS Star Rating Logic (Using flex-row-reverse trick) */
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; }
+        .star-rating input { display: none; }
+        .star-rating label { color: #d1d5db; cursor: pointer; transition: color 0.2s ease-in-out; }
+        .dark .star-rating label { color: #475569; }
+        /* When hovering a label, highlight it and all labels AFTER it in DOM (which are visually to the left) */
+        .star-rating label:hover, .star-rating label:hover ~ label { color: #f2a900; }
+        /* When input is checked, highlight the label and all labels AFTER it */
+        .star-rating input:checked ~ label { color: #f2a900; }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-darkbg text-gray-800 dark:text-gray-200 font-sans min-h-screen flex flex-col relative overflow-x-hidden">
+<body class="bg-gray-50 dark:bg-darkbg text-gray-900 dark:text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden bg-grid">
     
-    <!-- ANIMATED BACKGROUND BLOBS (The Apple Vibe) -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-amcteal/30 dark:bg-amcteal/20 rounded-full mix-blend-multiply dark:mix-blend-overlay filter blur-[100px] animate-blob"></div>
-        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-amcorange/30 dark:bg-amcorange/20 rounded-full mix-blend-multiply dark:mix-blend-overlay filter blur-[100px] animate-blob" style="animation-delay: 2s;"></div>
-        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-amcprimary/30 dark:bg-amcprimary/20 rounded-full mix-blend-multiply dark:mix-blend-overlay filter blur-[100px] animate-blob" style="animation-delay: 4s;"></div>
+    <div id="toast-container" class="fixed top-4 left-0 right-0 z-[100] flex flex-col items-center pointer-events-none space-y-2">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="animate-slide-down pointer-events-auto px-6 py-3 rounded-full font-bold shadow-2xl backdrop-blur-md border flex items-center gap-2
+                        {% if category == 'error' %} bg-red-100/90 text-red-700 border-red-200 dark:bg-red-900/90 dark:text-red-100 dark:border-red-800 
+                        {% else %} bg-green-100/90 text-green-700 border-green-200 dark:bg-green-900/90 dark:text-green-100 dark:border-green-800 {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
-    <!-- Theme Toggle -->
-    <button id="theme-toggle" type="button" class="fixed top-4 right-4 z-50 text-gray-500 dark:text-gray-400 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md hover:bg-white dark:hover:bg-gray-700 rounded-full text-sm p-3 shadow-lg border border-white/20 dark:border-gray-600/30 focus:outline-none transition-all active:scale-95">
-        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+    <!-- Geometric Decorative Shapes -->
+    <div class="fixed inset-0 overflow-hidden -z-10 pointer-events-none opacity-60">
+        <div class="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] bg-gradient-to-br from-amcteal/20 to-transparent rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-gradient-to-tr from-amcprimary/20 to-transparent rounded-full blur-3xl"></div>
+    </div>
+
+    <button id="theme-toggle" class="fixed bottom-6 right-6 z-50 glass-panel rounded-full p-4 btn-premium text-gray-600 dark:text-gray-300">
+        <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
     </button>
 
-    <main class="flex-grow flex flex-col justify-center items-center p-4 z-10 w-full animate-fade-in-up">
+    <main class="flex-grow flex flex-col justify-center items-center p-4 z-10 w-full animate-slide-down">
         {% block content %}{% endblock %}
     </main>
 
     <script>
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            themeToggleDarkIcon.classList.remove('hidden');
-        }
-
+        setTimeout(() => { const c = document.getElementById('toast-container'); if(c) { c.style.opacity = '0'; c.style.transition = 'opacity 0.5s ease'; } }, 4000);
+        var dIcon = document.getElementById('theme-toggle-dark-icon'), lIcon = document.getElementById('theme-toggle-light-icon');
+        if (document.documentElement.classList.contains('dark')) { lIcon.classList.remove('hidden'); } else { dIcon.classList.remove('hidden'); }
         document.getElementById('theme-toggle').addEventListener('click', function() {
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-            if (localStorage.getItem('color-theme') === 'light') {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('color-theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('color-theme', 'light');
-            }
+            dIcon.classList.toggle('hidden'); lIcon.classList.toggle('hidden');
+            if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.setItem('color-theme', 'light'); } 
+            else { document.documentElement.classList.add('dark'); localStorage.setItem('color-theme', 'dark'); }
         });
     </script>
 </body>

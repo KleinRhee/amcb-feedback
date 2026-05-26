@@ -1,37 +1,33 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="w-full max-w-md bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-2xl p-8 text-center transition-colors">
+<div class="w-full max-w-md glass-panel rounded-[2rem] shadow-2xl p-10 text-center transition-colors border border-gray-200 dark:border-gray-800">
     
-    <!-- Glowing Success Icon Animation -->
-    <div class="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
-        <div class="absolute inset-0 bg-amcteal/20 dark:bg-amcteal/40 rounded-full blur-xl animate-pulse"></div>
-        <div class="relative w-24 h-24 bg-gradient-to-br from-amcteal to-amcprimary text-white rounded-full flex items-center justify-center shadow-lg">
-            <svg class="w-12 h-12 animate-[bounce_1s_ease-in-out]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="relative w-32 h-32 mx-auto mb-8 flex items-center justify-center">
+        <div class="absolute inset-0 bg-amcteal/20 dark:bg-amcteal/30 rounded-full blur-2xl animate-pulse"></div>
+        <div class="relative w-24 h-24 bg-gradient-to-br from-amcteal to-amcprimary text-white rounded-full flex items-center justify-center shadow-xl">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
             </svg>
         </div>
     </div>
 
-    <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">Thank You!</h1>
-    <p class="text-gray-500 dark:text-gray-400 text-md mb-10 leading-relaxed">
-        Your feedback is extremely valuable. Thank you for helping us improve Adventist Medical Center - Bacolod.
+    <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Thank You!</h1>
+    <p class="text-gray-500 dark:text-gray-400 text-lg mb-10 leading-relaxed font-medium">
+        Your response has been securely recorded. We appreciate your time.
     </p>
 
-    <!-- IT STAFF CONTROLS (Beautiful UI Loop) -->
-    <div class="space-y-3 pt-6 border-t border-gray-200 dark:border-gray-700/50">
-        <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">IT Staff Menu</p>
-        
-        <a href="/dashboard" class="block w-full bg-amcprimary text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-opacity-90 active:scale-95 transition-all">
-            Return to Dashboard
+    <!-- IT STAFF CONTROLS -->
+    <div class="space-y-3 pt-8 border-t border-gray-200 dark:border-gray-800">
+        <a href="/dashboard" class="flex items-center justify-center w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-4 rounded-xl font-bold shadow-lg hover:opacity-90 active:scale-95 transition-all">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            Dashboard
         </a>
-        
         <div class="flex gap-3">
-            <a href="/form/out-patient" class="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all text-sm">
-                New OP Form
+            <a href="/form/out-patient" class="flex-1 bg-white/50 dark:bg-black/30 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 py-3 rounded-xl font-bold hover:bg-white dark:hover:bg-gray-800 active:scale-95 transition-all text-sm">
+                + Out-Patient
             </a>
-            <a href="/form/in-patient" class="flex-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all text-sm">
-                New IP Form
+            <a href="/form/in-patient" class="flex-1 bg-white/50 dark:bg-black/30 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 py-3 rounded-xl font-bold hover:bg-white dark:hover:bg-gray-800 active:scale-95 transition-all text-sm">
+                + In-Patient
             </a>
         </div>
     </div>

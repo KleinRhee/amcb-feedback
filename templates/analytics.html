@@ -1,134 +1,111 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div class="w-full max-w-7xl px-4 py-6 transition-colors">
+<div class="w-full max-w-7xl px-2 py-4">
     
-    <!-- Header & Navigation -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 glass-panel p-6 rounded-[2rem] shadow-sm">
         <div>
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amcprimary to-amcteal">Analytics Dashboard</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Real-time patient feedback insights</p>
-        </div>
-        <div class="flex space-x-3">
-            <a href="/dashboard" class="bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all shadow-sm">
-                Back
+            <a href="/dashboard" class="inline-flex items-center text-gray-500 hover:text-amcprimary dark:hover:text-amcteal font-bold transition-colors btn-premium mb-2 bg-gray-100 dark:bg-slate-800 px-3 py-1 rounded-full text-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> Dashboard
             </a>
-            <a href="/export" class="bg-gradient-to-r from-amcorange to-[#ff9100] text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg hover:shadow-amcorange/40 active:scale-95 transition-all flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Admin Analytics</h1>
+        </div>
+        
+        <!-- Date Filter & Export -->
+        <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+            <form method="GET" action="/admin" class="flex gap-2">
+                <select name="month" class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-white px-4 py-3 rounded-xl font-bold outline-none shadow-sm focus:ring-2 focus:ring-amcprimary cursor-pointer">
+                    <option value="">All Time</option>
+                    {% for m in available_months %}
+                        <option value="{{ m }}" {% if current_month == m %}selected{% endif %}>{{ m }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-white px-4 py-3 rounded-xl font-bold btn-premium shadow-sm">Filter</button>
+            </form>
+
+            <a href="/export" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl font-bold shadow-lg hover:opacity-90 btn-premium flex items-center justify-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 Export CSV
             </a>
         </div>
     </div>
 
-    <!-- ROW 1: QUICK STATS (Top Metric Cards) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <!-- Total Feedback -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 flex items-center justify-between">
+        <div class="glass-panel rounded-[2rem] shadow-xl p-6 flex items-center justify-between border-t-4 border-t-amcprimary">
             <div>
-                <p class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total Responses</p>
-                <h3 class="text-4xl font-black text-amcprimary dark:text-amcteal">{{ total_feedback }}</h3>
-            </div>
-            <div class="p-4 bg-amcprimary/10 dark:bg-amcteal/10 rounded-2xl text-amcprimary dark:text-amcteal">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Total Responses</p>
+                <h3 class="text-5xl font-black text-gray-900 dark:text-white tracking-tighter">{{ total_feedback }}</h3>
             </div>
         </div>
-        
-        <!-- Overall Rating -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 flex items-center justify-between">
+        <div class="glass-panel rounded-[2rem] shadow-xl p-6 flex items-center justify-between border-t-4 border-t-amcorange">
             <div>
-                <p class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Avg Satisfaction</p>
-                <h3 class="text-4xl font-black text-amcorange">{{ overall_avg }} <span class="text-lg text-gray-400 font-medium">/ 5</span></h3>
+                <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Avg Satisfaction</p>
+                <h3 class="text-5xl font-black text-gray-900 dark:text-white tracking-tighter">{{ overall_avg }} <span class="text-xl text-gray-400 font-medium">/5</span></h3>
             </div>
-            <div class="p-4 bg-amcorange/10 rounded-2xl text-amcorange">
-                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-            </div>
+            <!-- Star Graphic -->
+            <svg class="w-12 h-12 text-amcorange opacity-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
         </div>
-
-        <!-- Recommend Rate -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 flex items-center justify-between">
+        <div class="glass-panel rounded-[2rem] shadow-xl p-6 flex items-center justify-between border-t-4 border-t-green-500">
             <div>
-                <p class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Would Recommend</p>
-                <h3 class="text-4xl font-black text-green-500">{{ recommend_percent }}%</h3>
-            </div>
-            <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl text-green-500">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.514"></path></svg>
+                <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Would Recommend</p>
+                <h3 class="text-5xl font-black text-gray-900 dark:text-white tracking-tighter">{{ recommend_percent }}%</h3>
             </div>
         </div>
     </div>
 
-    <!-- ROW 2: MAIN CHARTS -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- Average Ratings Bar Chart -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Average Ratings per Category</h3>
-            <div class="relative h-64 w-full">
-                <canvas id="ratingsChart"></canvas>
-            </div>
+        <div class="glass-panel rounded-[2rem] shadow-xl p-8">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-6">Average Ratings</h3>
+            <div class="relative h-64 w-full"><canvas id="ratingsChart"></canvas></div>
         </div>
-
-        <!-- Department Breakdown Doughnut -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 flex flex-col">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Feedback by Department</h3>
-            <div class="relative flex-grow flex items-center justify-center h-64">
-                <canvas id="deptChart"></canvas>
-            </div>
+        <div class="glass-panel rounded-[2rem] shadow-xl p-8 flex flex-col">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-6">Department Breakdown</h3>
+            <div class="relative flex-grow flex items-center justify-center h-64"><canvas id="deptChart"></canvas></div>
         </div>
     </div>
 
-    <!-- ROW 3: CHARTS & STAFF -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Marketing Sources Bar -->
-        <div class="lg:col-span-2 bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Marketing Sources (How they heard)</h3>
-            <div class="relative h-56 w-full">
-                <canvas id="sourceChart"></canvas>
-            </div>
+        <div class="lg:col-span-2 glass-panel rounded-[2rem] shadow-xl p-8">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-6">Marketing Sources</h3>
+            <div class="relative h-56 w-full"><canvas id="sourceChart"></canvas></div>
         </div>
-
-        <!-- IT Staff Leaderboard -->
-        <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">IT Staff Leaderboard</h3>
-            <ul class="space-y-3 overflow-y-auto h-48 pr-2">
+        <div class="glass-panel rounded-[2rem] shadow-xl p-8">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-6 border-b border-gray-200 dark:border-slate-700 pb-2">Staff Leaderboard</h3>
+            <ul class="space-y-4 overflow-y-auto h-48 pr-2">
                 {% for staff in staff_breakdown %}
-                <li class="flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-full bg-amcprimary text-white flex items-center justify-center font-bold text-sm">
-                            {{ staff['username'][0] | upper }}
-                        </div>
-                        <span class="font-semibold text-gray-700 dark:text-gray-300">{{ staff['username'] }}</span>
-                    </div>
-                    <span class="bg-amcorange text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">{{ staff['count'] }} forms</span>
+                <li class="flex justify-between items-center bg-white/50 dark:bg-slate-900/50 p-4 rounded-2xl border border-gray-100 dark:border-slate-700">
+                    <span class="font-bold text-gray-800 dark:text-gray-200">{{ staff['username'] }}</span>
+                    <span class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full">{{ staff['count'] }}</span>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 
-    <!-- ROW 4: RECENT WRITTEN COMMENTS -->
-    <div class="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-white/40 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 overflow-hidden">
+    <!-- RECENT COMMENTS WITH TIMESTAMPS -->
+    <div class="glass-panel rounded-[2rem] shadow-xl p-8 overflow-hidden">
         <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Recent Written Feedback</h3>
-        <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
             <table class="min-w-full text-sm text-left">
-                <thead class="bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                <thead class="bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300">
                     <tr>
-                        <th class="py-3 px-4 font-semibold border-b dark:border-gray-700">Department</th>
-                        <th class="py-3 px-4 font-semibold border-b dark:border-gray-700 text-green-600 dark:text-green-400">Compliments</th>
-                        <th class="py-3 px-4 font-semibold border-b dark:border-gray-700 text-red-600 dark:text-red-400">Complaints</th>
+                        <th class="py-4 px-5 font-semibold border-b dark:border-slate-700">Exact Time</th>
+                        <th class="py-4 px-5 font-semibold border-b dark:border-slate-700">Department</th>
+                        <th class="py-4 px-5 font-semibold border-b dark:border-slate-700 text-green-600 dark:text-green-400">Compliments</th>
+                        <th class="py-4 px-5 font-semibold border-b dark:border-slate-700 text-red-500 dark:text-red-400">Complaints</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody class="divide-y divide-gray-200 dark:divide-slate-700 bg-white/50 dark:bg-slate-900/30">
                     {% for comment in recent_comments %}
-                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
-                        <td class="py-3 px-4 text-gray-800 dark:text-gray-300 font-medium whitespace-nowrap">{{ comment['department'] }}</td>
-                        <td class="py-3 px-4 text-gray-600 dark:text-gray-400">{{ comment['compliments'] or '-' }}</td>
-                        <td class="py-3 px-4 text-gray-600 dark:text-gray-400">{{ comment['complaints'] or '-' }}</td>
+                    <tr class="hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="py-4 px-5 text-gray-500 dark:text-gray-400 font-mono text-xs whitespace-nowrap">{{ comment['timestamp'] }}</td>
+                        <td class="py-4 px-5 text-gray-800 dark:text-gray-200 font-bold whitespace-nowrap">{{ comment['department'] }}</td>
+                        <td class="py-4 px-5 text-gray-600 dark:text-gray-400">{{ comment['compliments'] or '-' }}</td>
+                        <td class="py-4 px-5 text-gray-600 dark:text-gray-400">{{ comment['complaints'] or '-' }}</td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="3" class="py-6 text-center text-gray-500 italic">No written comments yet.</td>
+                        <td colspan="4" class="py-8 text-center text-gray-500 italic">No written comments found for this period.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -138,93 +115,58 @@
 
 </div>
 
-<!-- ========================================== -->
-<!-- CHART DATA & LOGIC -->
-<!-- ========================================== -->
-
-<!-- 1. We securely pass the Python data to HTML as a hidden JSON string. This stops IDE errors! -->
 <script id="dashboardData" type="application/json">
 {
-    "avg_ratings": {{ avg_ratings | tojson }},
-    "dept_labels": {{ dept_labels | tojson }},
-    "dept_counts": {{ dept_counts | tojson }},
-    "source_labels": {{ source_labels | tojson }},
+    "avg_ratings": {{ avg_ratings | tojson }}, "dept_labels": {{ dept_labels | tojson }},
+    "dept_counts": {{ dept_counts | tojson }}, "source_labels": {{ source_labels | tojson }},
     "source_counts": {{ source_counts | tojson }}
 }
 </script>
-
-<!-- 2. The pure JavaScript reads the JSON above and draws the charts -->
 <script>
-    // Grab the JSON string from the hidden script tag above and parse it into a JS Object
     const rawData = document.getElementById('dashboardData').textContent;
     const dbData = JSON.parse(rawData);
-
-    // Set global default colors so charts look good in dark mode
     Chart.defaults.color = '#9ca3af'; 
     Chart.defaults.font.family = 'Inter, sans-serif';
+    Chart.defaults.font.weight = 'bold';
     Chart.defaults.scale.grid.color = 'rgba(156, 163, 175, 0.1)';
 
-    // Average Ratings Bar Chart
     new Chart(document.getElementById('ratingsChart'), {
         type: 'bar',
         data: {
             labels: ['Honesty', 'Empathy', 'Responsibility', 'Efficiency', 'Overall'],
             datasets: [{
-                label: 'Average Score (out of 5)',
-                data: dbData.avg_ratings, // Using the parsed data here
+                data: dbData.avg_ratings,
                 backgroundColor: ['#00838b', '#00838b', '#00838b', '#00838b', '#f2a900'],
-                borderRadius: 8,
-                borderSkipped: false
+                borderRadius: 8
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, max: 5 } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { max: 5 } } }
     });
 
-    // Department Breakdown Doughnut Chart
     new Chart(document.getElementById('deptChart'), {
         type: 'doughnut',
         data: {
             labels: dbData.dept_labels,
             datasets: [{
                 data: dbData.dept_counts,
-                backgroundColor: ['#004b72', '#00838b', '#f2a900', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#f43f5e'],
-                borderWidth: 0,
-                hoverOffset: 4
+                backgroundColor: ['#004b72', '#00838b', '#f2a900', '#10b981', '#3b82f6', '#8b5cf6'],
+                borderWidth: 0, hoverOffset: 4
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: { legend: { position: 'right', labels: { boxWidth: 12, padding: 15 } } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
     });
 
-    // Source Breakdown Bar Chart
     new Chart(document.getElementById('sourceChart'), {
         type: 'bar',
         data: {
             labels: dbData.source_labels,
             datasets: [{
-                label: 'Responses',
                 data: dbData.source_counts,
-                backgroundColor: 'rgba(0, 75, 114, 0.8)',
-                borderColor: '#004b72',
-                borderWidth: 1,
+                backgroundColor: '#004b72',
                 borderRadius: 6
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
 </script>
 {% endblock %}
