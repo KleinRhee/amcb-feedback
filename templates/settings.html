@@ -2,6 +2,7 @@
 {% block content %}
 <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden shadow-2xl transition-colors border border-gray-200 dark:border-gray-800">
     
+    <!-- HIGH VISIBILITY BACK BUTTON -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
         <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
@@ -13,29 +14,34 @@
         </span>
     </div>
 
-    <div class="p-6 md:p-8 space-y-8 text-center md:text-left">
+    <div class="p-6 md:p-8 space-y-8 text-left">
         <div>
             <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">System Config</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Manage IT staff accounts and database records.</p>
         </div>
 
-        <!-- NEW: Data Management Portal -->
-        <a href="/manage_records" class="flex items-center justify-between bg-amcteal text-white p-6 rounded-2xl shadow-lg hover:shadow-xl btn-premium group">
-            <div>
-                <h3 class="text-xl font-black mb-1">Manage Feedback Records</h3>
-                <p class="text-sm text-white/80 font-medium">Archive bad data or permanently delete fake responses.</p>
+        <!-- PERFECTED: Mobile-Responsive Data Management Button -->
+        <a href="/manage_records" class="flex items-center gap-4 bg-gradient-to-r from-amcteal to-[#00a8b3] text-white p-5 md:p-6 rounded-2xl shadow-lg hover:shadow-amcteal/40 active:scale-95 transition-all group border border-amcteal/50">
+            <div class="bg-white/20 p-3 rounded-full flex-shrink-0">
+                <!-- Database Icon -->
+                <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
             </div>
-            <div class="bg-white/20 p-3 rounded-full group-active:scale-95 transition-transform hidden md:block">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <div class="flex-grow">
+                <h3 class="text-lg md:text-xl font-black mb-1">Manage Feedback Records</h3>
+                <p class="text-xs md:text-sm text-white/80 font-medium leading-snug">Archive bad data or permanently delete fake responses.</p>
+            </div>
+            <!-- iOS Right Chevron -->
+            <div class="flex-shrink-0 bg-white/10 p-2 rounded-full group-hover:bg-white/20 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </div>
         </a>
 
         <!-- USER MANAGEMENT -->
-        <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6 text-left">
+        <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6 text-left shadow-sm">
             <h3 class="text-lg font-black text-gray-900 dark:text-white mb-4">Add IT Staff Account</h3>
             <form method="POST" action="/add_user" class="flex flex-col md:flex-row gap-3">
-                <input type="text" name="username" placeholder="Username" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm">
-                <input type="password" name="password" placeholder="Password" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm">
+                <input type="text" name="username" placeholder="Username" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm text-gray-900 dark:text-white">
+                <input type="password" name="password" placeholder="Password" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm text-gray-900 dark:text-white">
                 <button type="submit" class="bg-amcprimary text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-md">Add User</button>
             </form>
             
@@ -59,10 +65,12 @@
             </div>
         </div>
 
-        <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 md:p-8 relative overflow-hidden text-left">
+        <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 md:p-8 relative overflow-hidden text-left shadow-sm">
             <h3 class="text-xl font-black text-red-700 dark:text-red-400 mb-2">Danger Zone</h3>
             <p class="text-sm text-red-600/80 dark:text-red-400/80 mb-6 font-medium">This will permanently delete all patient feedback data from the database. This action cannot be undone.</p>
-            <button onclick="document.getElementById('resetModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-lg hover:bg-red-700 w-full md:w-auto text-center">
+            
+            <button onclick="document.getElementById('resetModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-lg hover:bg-red-700 w-full md:w-auto text-center flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 Factory Reset Database
             </button>
         </div>
@@ -72,7 +80,7 @@
 <div id="resetModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 text-left">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('resetModal').classList.add('hidden')"></div>
     <div class="bg-white dark:bg-darkcard rounded-3xl p-8 max-w-sm w-full relative z-10 shadow-2xl border border-gray-200 dark:border-gray-700 animate-slide-down">
-        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         </div>
         <h3 class="text-2xl font-black text-center text-gray-900 dark:text-white mb-2">Are you sure?</h3>
@@ -81,7 +89,7 @@
             <form method="POST" action="/reset_data">
                 <button type="submit" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl btn-premium shadow-lg active:scale-95 transition-all">Yes, Wipe Data</button>
             </form>
-            <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold py-3.5 rounded-xl btn-premium active:scale-95 transition-all">Cancel</button>
+            <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold py-3.5 rounded-xl btn-premium active:scale-95 transition-all shadow-sm">Cancel</button>
         </div>
     </div>
 </div>
