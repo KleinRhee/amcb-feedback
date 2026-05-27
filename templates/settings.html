@@ -2,72 +2,63 @@
 {% block content %}
 <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden shadow-2xl transition-colors border border-gray-200 dark:border-gray-800">
     
-    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40">
-        <a href="/dashboard" class="flex items-center text-gray-500 hover:text-gray-900 dark:hover:text-white font-bold transition-colors btn-premium">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> Back
+    <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
+        <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-800 text-amcprimary dark:text-amcteal font-bold rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-gray-200/50 dark:border-slate-700/50 active:scale-95">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
+            Back
         </a>
-        <span class="text-xs font-black tracking-widest text-red-500 uppercase flex items-center">
+        <span class="text-xs font-black tracking-widest text-red-500 uppercase flex items-center pr-2">
             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
             Super Admin
         </span>
     </div>
 
-    <div class="p-8 space-y-8">
+    <div class="p-6 md:p-8 space-y-8 text-center md:text-left">
         <div>
-            <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">System Config</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">Manage IT staff accounts and database records.</p>
+            <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight">System Config</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Manage IT staff accounts and database records.</p>
         </div>
 
-        <!-- 1. USER MANAGEMENT -->
-        <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6">
+        <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6 text-left">
             <h3 class="text-lg font-black text-gray-900 dark:text-white mb-4">Add IT Staff Account</h3>
             <form method="POST" action="/add_user" class="flex flex-col md:flex-row gap-3">
-                <input type="text" name="username" placeholder="Username" required class="flex-1 p-3 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium">
-                <input type="password" name="password" placeholder="Password" required class="flex-1 p-3 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium">
-                <button type="submit" class="bg-amcprimary text-white px-6 py-3 rounded-xl font-bold btn-premium">Add User</button>
+                <input type="text" name="username" placeholder="Username" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm">
+                <input type="password" name="password" placeholder="Password" required class="flex-1 p-3.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none font-medium shadow-sm">
+                <button type="submit" class="bg-amcprimary text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-md">Add User</button>
             </form>
             
-            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Active Accounts</h3>
-                <div class="space-y-2">
-                    <!-- The master account cannot be deleted -->
-                    <div class="flex justify-between items-center p-3 bg-white/50 dark:bg-black/50 rounded-xl border border-gray-100 dark:border-gray-800">
+            <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Active Accounts</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-4 bg-white/50 dark:bg-black/50 rounded-xl border border-gray-100 dark:border-gray-800">
                         <span class="font-bold text-gray-900 dark:text-white flex items-center">
-                            <svg class="w-4 h-4 mr-2 text-amcorange" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-5 h-5 mr-2 text-amcorange" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                             it_super
                         </span>
                         <span class="text-xs font-bold text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">Master</span>
                     </div>
-                    <!-- Dynamically list other accounts safely without IDE errors -->
                     {% for user in users %}
-                    <div class="flex justify-between items-center p-3 bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                    <div class="flex justify-between items-center p-4 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
                         <span class="font-bold text-gray-700 dark:text-gray-300">{{ user.username }}</span>
-                        <a href="/delete_user/{{ user.id }}" 
-                           class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full hover:bg-red-100 btn-premium" 
-                           data-username="{{ user.username }}"
-                           onclick="return confirm('Are you sure you want to permanently delete the account: ' + this.getAttribute('data-username') + '?');">
-                           Remove
-                        </a>
+                        <a href="/delete_user/{{ user.id }}" class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-full hover:bg-red-100 btn-premium" data-username="{{ user.username }}" onclick="return confirm('Are you sure you want to permanently delete the account: ' + this.getAttribute('data-username') + '?');">Remove</a>
                     </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <!-- 2. FACTORY RESET (DANGER ZONE) -->
-        <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 relative overflow-hidden">
-            <h3 class="text-lg font-black text-red-700 dark:text-red-400 mb-2">Danger Zone</h3>
+        <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 md:p-8 relative overflow-hidden text-left">
+            <h3 class="text-xl font-black text-red-700 dark:text-red-400 mb-2">Danger Zone</h3>
             <p class="text-sm text-red-600/80 dark:text-red-400/80 mb-6 font-medium">This will permanently delete all patient feedback data from the database. This action cannot be undone.</p>
             
-            <button onclick="document.getElementById('resetModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-3 rounded-xl font-bold btn-premium shadow-lg hover:bg-red-700 w-full md:w-auto">
+            <button onclick="document.getElementById('resetModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-lg hover:bg-red-700 w-full md:w-auto text-center">
                 Factory Reset Database
             </button>
         </div>
     </div>
 </div>
 
-<!-- HCI Confirmation Modal (Prevents Accidental Wipes) -->
-<div id="resetModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+<div id="resetModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 text-left">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('resetModal').classList.add('hidden')"></div>
     <div class="bg-white dark:bg-darkcard rounded-3xl p-8 max-w-sm w-full relative z-10 shadow-2xl border border-gray-200 dark:border-gray-700 animate-slide-down">
         <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">

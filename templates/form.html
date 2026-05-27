@@ -2,16 +2,17 @@
 {% block content %}
 <div class="w-full max-w-lg glass-panel rounded-[2rem] shadow-2xl my-6 transition-colors border border-gray-200 dark:border-gray-800 overflow-hidden relative">
     
-    <div class="flex items-center justify-between px-6 py-4 bg-white/40 dark:bg-black/20 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 backdrop-blur-md">
-        <a href="/dashboard" class="flex items-center text-gray-500 hover:text-gray-900 dark:hover:text-white font-bold transition-colors btn-premium">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> Back
+    <div class="flex items-center justify-between px-4 py-4 bg-white/60 dark:bg-black/40 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 backdrop-blur-md">
+        <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-800 text-amcprimary dark:text-amcteal font-bold rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-gray-200/50 dark:border-slate-700/50 active:scale-95">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
+            Back
         </a>
-        <span class="text-xs font-black tracking-widest text-amcprimary dark:text-amcteal uppercase">AMC-B</span>
+        <span class="text-xs font-black tracking-widest text-amcprimary dark:text-amcteal uppercase pr-2">AMC-B</span>
     </div>
 
     <div class="p-6 md:p-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">{{ form_type | replace('-', ' ') | title }} <br><span class="text-amcprimary dark:text-amcteal">Feedback</span></h1>
+        <div class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">{{ form_type | replace('-', ' ') | title }} <br><span class="text-amcprimary dark:text-amcteal">Feedback</span></h1>
         </div>
 
         <form method="POST" action="/submit_feedback" class="space-y-7 relative z-10">
@@ -52,46 +53,28 @@
                 </div>
             </div>
 
-            <!-- STAR RATING UPGRADE -->
             <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex justify-between items-end mb-4">
-                    <h3 class="text-xl font-black text-gray-900 dark:text-white tracking-tight">Ratings</h3>
-                    <p class="text-xs font-bold text-gray-400">1 = Poor, 5 = Excellent</p>
+                <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 gap-2">
+                    <h3 class="text-xl font-black text-gray-900 dark:text-white tracking-tight text-center md:text-left">Service Ratings</h3>
+                    <p class="text-xs font-bold text-gray-400 text-center md:text-right">1 = Poor, 5 = Excellent</p>
                 </div>
                 
                 <div class="space-y-6">
                 {% for question in questions %}
                 {% set q_index = loop.index0 %}
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border border-gray-100 dark:border-slate-700">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl border border-gray-100 dark:border-slate-700 text-center md:text-left">
                     <label class="text-sm font-semibold text-gray-800 dark:text-gray-200 flex-1">{{ loop.index }}. {{ question }}</label>
-                    
-                    <!-- Pure CSS Stars -->
-                    <div class="star-rating">
-                        <!-- Value 5 is first because of flex-row-reverse -->
+                    <div class="star-rating justify-center md:justify-end">
                         <input type="radio" id="star5_{{ q_index }}" name="rating_{{ q_index }}" value="5" required>
-                        <label for="star5_{{ q_index }}">
-                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </label>
-
+                        <label for="star5_{{ q_index }}"><svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
                         <input type="radio" id="star4_{{ q_index }}" name="rating_{{ q_index }}" value="4" required>
-                        <label for="star4_{{ q_index }}">
-                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </label>
-
+                        <label for="star4_{{ q_index }}"><svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
                         <input type="radio" id="star3_{{ q_index }}" name="rating_{{ q_index }}" value="3" required>
-                        <label for="star3_{{ q_index }}">
-                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </label>
-
+                        <label for="star3_{{ q_index }}"><svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
                         <input type="radio" id="star2_{{ q_index }}" name="rating_{{ q_index }}" value="2" required>
-                        <label for="star2_{{ q_index }}">
-                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </label>
-
+                        <label for="star2_{{ q_index }}"><svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
                         <input type="radio" id="star1_{{ q_index }}" name="rating_{{ q_index }}" value="1" required>
-                        <label for="star1_{{ q_index }}">
-                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </label>
+                        <label for="star1_{{ q_index }}"><svg class="w-9 h-9 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></label>
                     </div>
                 </div>
                 {% endfor %}
@@ -109,9 +92,9 @@
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="pt-6 border-t border-gray-200 dark:border-gray-700 text-center md:text-left">
                 <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4">Would you recommend AMC-B? <span class="text-red-500">*</span></label>
-                <div class="flex gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <label class="relative flex-1 cursor-pointer">
                         <input type="radio" name="recommend" value="Yes" required class="peer sr-only">
                         <div class="w-full py-4 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 font-bold peer-checked:border-amcteal peer-checked:bg-amcteal/10 peer-checked:text-amcteal peer-active:scale-95 transition-all shadow-sm">
@@ -127,15 +110,17 @@
                 </div>
             </div>
 
-            <div class="pt-6">
+            <div class="pt-6 text-center md:text-left">
                 <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4">How did you hear about us?</label>
-                <div class="grid grid-cols-2 gap-3">
-                    {% set sources = ["Newspaper", "Signages", "TV/Radio", "Social Media", "Website", "Friends/Relative", "Events", "Other"] %}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <!-- FIXED: Added spaces around slashes to allow natural wrapping -->
+                    {% set sources = ["Newspaper", "Signages", "TV / Radio", "Social Media", "Website", "Friends / Relative", "Events", "Other"] %}
                     {% for src in sources %}
-                    <label class="relative cursor-pointer">
+                    <label class="relative cursor-pointer h-full block">
                         <input type="checkbox" name="source[]" value="{{ src }}" class="peer sr-only">
-                        <div class="w-full py-3 px-2 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-600 dark:text-gray-400 font-medium text-sm peer-checked:border-amcprimary peer-checked:bg-amcprimary peer-checked:text-white peer-active:scale-95 transition-all">
-                            {{ src }}
+                        <!-- FIXED: h-full, min-h, flex-col, and whitespace-normal ensures perfect resizing -->
+                        <div class="w-full h-full min-h-[3.5rem] flex items-center justify-center px-2 py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-600 dark:text-gray-400 font-bold text-[13px] sm:text-sm leading-tight peer-checked:border-amcprimary peer-checked:bg-amcprimary peer-checked:text-white peer-active:scale-95 transition-all shadow-sm">
+                            <span class="whitespace-normal break-words">{{ src }}</span>
                         </div>
                     </label>
                     {% endfor %}

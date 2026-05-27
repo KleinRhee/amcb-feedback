@@ -83,7 +83,6 @@ def dashboard():
 
 @app.route('/change_password', methods=['POST'])
 def change_password():
-    """Allows any logged-in user to securely change their own password."""
     if 'user_id' not in session: return redirect(url_for('login'))
     current_pw = request.form['current_password']
     new_pw = request.form['new_password']
@@ -127,72 +126,63 @@ def admin_analytics():
     if 'user_id' not in session: return redirect(url_for('login'))
     db = get_db()
     
-    # Check if a month filter is applied (Format: YYYY-MM)
     month_filter = request.args.get('month', '')
-    
-    # Base WHERE clause to inject into our SQL queries dynamically
     time_query = f"WHERE timestamp LIKE '{month_filter}%'" if month_filter else "WHERE 1=1"
     and_time_query = f"AND timestamp LIKE '{month_filter}%'" if month_filter else ""
 
-    # 1. Total Feedback
     total_feedback = db.execute(f"SELECT COUNT(*) as count FROM feedback {time_query}").fetchone()['count']
-    
-    # 2. Staff Breakdown
-    staff_breakdown = [dict(row) for row in db.execute(f'''
-        SELECT users.username, COUNT(feedback.id) as count 
-        FROM users LEFT JOIN feedback ON users.id = feedback.admin_user_id AND feedback.timestamp LIKE '{month_filter}%' 
-        GROUP BY users.username ORDER BY count DESC''').fetchall()]
-        
-    # 3. Recent Comments (Now fetching Exact Timestamp)
+    staff_breakdown = [dict(row) for row in db.execute(f"SELECT users.username, COUNT(feedback.id) as count FROM users LEFT JOIN feedback ON users.id = feedback.admin_user_id AND feedback.timestamp LIKE '{month_filter}%' GROUP BY users.username ORDER BY count DESC").fetchall()]
     recent_comments = [dict(row) for row in db.execute(f"SELECT department, compliments, complaints, timestamp FROM feedback WHERE (compliments != '' OR complaints != '') {and_time_query} ORDER BY timestamp DESC LIMIT 8").fetchall()]
-    
-    # 4. Average Ratings
     avg_row = db.execute(f'SELECT AVG(rating_1) as r1, AVG(rating_2) as r2, AVG(rating_3) as r3, AVG(rating_4) as r4, AVG(rating_5) as r5 FROM feedback {time_query}').fetchone()
     avg_ratings = [round(avg_row['r1'] or 0, 1), round(avg_row['r2'] or 0, 1), round(avg_row['r3'] or 0, 1), round(avg_row['r4'] or 0, 1), round(avg_row['r5'] or 0, 1)]
     overall_avg = round(avg_row['r5'] or 0, 1)
     
-    # 5. Department & Recommendations
     dept_rows = db.execute(f'SELECT department, COUNT(*) as count FROM feedback {time_query} GROUP BY department').fetchall()
     rec_rows = db.execute(f'SELECT recommend, COUNT(*) as count FROM feedback {time_query} GROUP BY recommend').fetchall()
     yes_count = next((r['count'] for r in rec_rows if r['recommend'] == 'Yes'), 0)
     recommend_percent = int((yes_count / total_feedback * 100)) if total_feedback > 0 else 0
     
-    # 6. Sources
     all_sources = db.execute(f"SELECT source FROM feedback WHERE source != '' {and_time_query}").fetchall()
     source_dict = {}
     for row in all_sources:
         for s in [s.strip() for s in row['source'].split(',')]:
             if s: source_dict[s] = source_dict.get(s, 0) + 1
             
-    # Fetch unique months for the dropdown filter dynamically
     months_raw = db.execute("SELECT DISTINCT strftime('%Y-%m', timestamp) as month FROM feedback ORDER BY month DESC").fetchall()
     available_months = [row['month'] for row in months_raw if row['month']]
 
-    return render_template('analytics.html', 
-                           total_feedback=total_feedback, overall_avg=overall_avg, recommend_percent=recommend_percent, 
-                           staff_breakdown=staff_breakdown, recent_comments=recent_comments, avg_ratings=avg_ratings, 
-                           dept_labels=[row['department'] for row in dept_rows], dept_counts=[row['count'] for row in dept_rows], 
-                           source_labels=list(source_dict.keys()), source_counts=list(source_dict.values()),
-                           available_months=available_months, current_month=month_filter)
+    return render_template('analytics.html', total_feedback=total_feedback, overall_avg=overall_avg, recommend_percent=recommend_percent, staff_breakdown=staff_breakdown, recent_comments=recent_comments, avg_ratings=avg_ratings, dept_labels=[row['department'] for row in dept_rows], dept_counts=[row['count'] for row in dept_rows], source_labels=list(source_dict.keys()), source_counts=list(source_dict.values()), available_months=available_months, current_month=month_filter)
 
 @app.route('/export')
 def export_csv():
     if 'user_id' not in session: return redirect(url_for('login'))
+    
+    # Check if we are filtering the export!
+    month_filter = request.args.get('month', '')
+    query = 'SELECT f.*, u.username FROM feedback f JOIN users u ON f.admin_user_id = u.id'
+    
+    if month_filter:
+        query += f" WHERE f.timestamp LIKE '{month_filter}%'"
+    
+    query += " ORDER BY f.timestamp DESC"
+    
     db = get_db()
-    data = db.execute('SELECT f.*, u.username FROM feedback f JOIN users u ON f.admin_user_id = u.id ORDER BY f.timestamp DESC').fetchall()
+    data = db.execute(query).fetchall()
+    
     si = io.StringIO()
     writer = csv.writer(si)
     writer.writerow(['ID', 'Form Type', 'Admin', 'Department', 'Admission Date', 'Contact', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Compliments', 'Complaints', 'Recommend', 'Source', 'Patient Name', 'Room Number', 'Timestamp'])
     for row in data: writer.writerow([row['id'], row['form_type'], row['username'], row['department'], row['date_admission'], row['contact_number'], row['rating_1'], row['rating_2'], row['rating_3'], row['rating_4'], row['rating_5'], row['compliments'], row['complaints'], row['recommend'], row['source'], row['patient_name'], row['room_number'], row['timestamp']])
+    
     output = Response(si.getvalue(), mimetype='text/csv')
-    output.headers["Content-Disposition"] = f"attachment; filename=amcb_export_{datetime.now().strftime('%Y%m%d')}.csv"
+    # Make the filename reflect the month if filtered
+    filename = f"amcb_export_{month_filter}.csv" if month_filter else f"amcb_export_ALL_{datetime.now().strftime('%Y%m%d')}.csv"
+    output.headers["Content-Disposition"] = f"attachment; filename={filename}"
     return output
 
 @app.route('/settings')
 def system_settings():
-    if session.get('username') != 'it_super':
-        flash("Access Denied: Super Admin privileges required.", "error")
-        return redirect(url_for('dashboard'))
+    if session.get('username') != 'it_super': return redirect(url_for('dashboard'))
     db = get_db()
     all_users = db.execute("SELECT id, username FROM users WHERE username != 'it_super'").fetchall()
     return render_template('settings.html', users=all_users, username=session['username'])
