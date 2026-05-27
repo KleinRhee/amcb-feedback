@@ -5,9 +5,9 @@
     
     <div class="glass-panel p-6 md:p-8 rounded-[2rem] shadow-sm mb-8 relative">
         
-        <!-- Back Button strictly locked to Top-Left -->
+        <!-- HIGH VISIBILITY BACK BUTTON -->
         <div class="flex justify-start w-full mb-6">
-            <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-800 text-amcprimary dark:text-amcteal font-bold rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-gray-200/50 dark:border-slate-700/50 active:scale-95">
+            <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> Dashboard
             </a>
         </div>
@@ -19,7 +19,6 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Real-time feedback monitoring.</p>
             </div>
             
-            <!-- Centered Filters and Export on Mobile -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-3 w-full lg:w-auto">
                 <form method="GET" action="/admin" class="flex w-full sm:w-auto gap-2 justify-center">
                     <select name="month" class="w-full sm:w-auto bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-white px-4 py-3 rounded-xl font-bold outline-none shadow-sm focus:ring-2 focus:ring-amcteal cursor-pointer text-center sm:text-left transition-colors">
@@ -28,7 +27,6 @@
                             <option value="{{ m }}" {% if current_month == m %}selected{% endif %}>{{ m }}</option>
                         {% endfor %}
                     </select>
-                    <!-- UPGRADED FILTER BUTTON -->
                     <button type="submit" class="bg-amcteal text-white px-6 py-3 rounded-xl font-bold btn-premium shadow-md hover:bg-opacity-90 flex items-center justify-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
                         Filter

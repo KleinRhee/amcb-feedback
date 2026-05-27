@@ -38,7 +38,10 @@ def init_db():
 
 init_db()
 
-DEPARTMENTS = ["Accounting", "Auxiliary", "Clinical Laboratory", "Diagnostic & Imaging Services", "Emergency Room", "Engineering and Maintenance", "Finance", "Food Industry", "Health Information Management", "HPC", "Housekeeping", "Human Resource", "Information Technology Services", "Marketing", "Nutribites", "Operating Room", "Outpatient Health & Wellness Hub", "Patient Business", "Patient Care Unit 1", "Patient Care Unit 2", "Patient Care Unit 3", "Pharmacy", "PT Rehab", "QC", "Renal Care", "Supply Management Office"]
+# Split departments based on the PDF reference!
+IN_PATIENT_DEPARTMENTS = ["PCU 1", "PCU 2", "PCU 3", "PCU 4", "PCU 5", "ICU", "LR/DR", "NIICU"]
+OUT_PATIENT_DEPARTMENTS = ["Accounting", "Auxiliary", "Clinical Laboratory", "Diagnostic & Imaging Services", "Emergency Room", "Engineering and Maintenance", "Finance", "Food Industry", "Health Information Management", "HPC", "Housekeeping", "Human Resource", "Information Technology Services", "Marketing", "Nutribites", "Operating Room", "Outpatient Health & Wellness Hub", "Patient Business", "Pharmacy", "PT Rehab", "QC", "Renal Care", "Supply Management Office"]
+
 RATING_QUESTIONS = ["Staff demonstrated honesty and professionalism", "Staff showed empathy, care, and respect.", "Concerns were handled responsibly and promptly.", "Needs were attended to efficiently", "Overall satisfaction with service received."]
 
 def get_local_ip():
@@ -100,7 +103,10 @@ def change_password():
 @app.route('/form/<form_type>')
 def render_feedback_form(form_type):
     if 'user_id' not in session: return redirect(url_for('login'))
-    return render_template('form.html', form_type=form_type, departments=DEPARTMENTS, questions=RATING_QUESTIONS)
+    
+    # Pass the correct list to the HTML template depending on what form the IT staff chose
+    departments = IN_PATIENT_DEPARTMENTS if form_type == 'in-patient' else OUT_PATIENT_DEPARTMENTS
+    return render_template('form.html', form_type=form_type, departments=departments, questions=RATING_QUESTIONS)
 
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
@@ -157,13 +163,9 @@ def admin_analytics():
 def export_csv():
     if 'user_id' not in session: return redirect(url_for('login'))
     
-    # Check if we are filtering the export!
     month_filter = request.args.get('month', '')
     query = 'SELECT f.*, u.username FROM feedback f JOIN users u ON f.admin_user_id = u.id'
-    
-    if month_filter:
-        query += f" WHERE f.timestamp LIKE '{month_filter}%'"
-    
+    if month_filter: query += f" WHERE f.timestamp LIKE '{month_filter}%'"
     query += " ORDER BY f.timestamp DESC"
     
     db = get_db()
@@ -175,7 +177,6 @@ def export_csv():
     for row in data: writer.writerow([row['id'], row['form_type'], row['username'], row['department'], row['date_admission'], row['contact_number'], row['rating_1'], row['rating_2'], row['rating_3'], row['rating_4'], row['rating_5'], row['compliments'], row['complaints'], row['recommend'], row['source'], row['patient_name'], row['room_number'], row['timestamp']])
     
     output = Response(si.getvalue(), mimetype='text/csv')
-    # Make the filename reflect the month if filtered
     filename = f"amcb_export_{month_filter}.csv" if month_filter else f"amcb_export_ALL_{datetime.now().strftime('%Y%m%d')}.csv"
     output.headers["Content-Disposition"] = f"attachment; filename={filename}"
     return output
