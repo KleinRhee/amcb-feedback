@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w-full max-w-7xl glass-panel rounded-[2rem] shadow-2xl transition-colors border border-gray-200 dark:border-gray-800 overflow-hidden relative">
+    
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
+        <a href="/settings" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
+            Back
+        </a>
+        <span class="text-xs font-black tracking-widest text-amcteal uppercase pr-2">Data Audit</span>
+    </div>
+
+    <div class="p-6 md:p-8 space-y-6">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+            <div>
+                <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Manage Records</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">View, Trash, or Permanently Delete feedback.</p>
+            </div>
+            
+            <div class="flex bg-gray-200 dark:bg-slate-800 p-1.5 rounded-xl border border-gray-300 dark:border-slate-700 w-full md:w-auto">
+                <button onclick="switchTab('active')" id="tab-active" class="flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm">Active</button>
+                <button onclick="switchTab('trashed')" id="tab-trashed" class="flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Trash</button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-700 shadow-inner">
+            <table class="min-w-full text-sm text-left">
+                <thead class="bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="py-4 px-5 font-bold border-b dark:border-slate-700">Date/Time</th>
+                        <th class="py-4 px-5 font-bold border-b dark:border-slate-700">Patient</th>
+                        <th class="py-4 px-5 font-bold border-b dark:border-slate-700">Department</th>
+                        <th class="py-4 px-5 font-bold border-b dark:border-slate-700">Status</th>
+                        <th class="py-4 px-5 font-bold border-b dark:border-slate-700 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-slate-700 bg-white/50 dark:bg-slate-900/30">
+                    {% for rec in records %}
+                    <tr class="record-row row-{{ rec['status'] }} hover:bg-gray-50/80 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="py-4 px-5 text-gray-500 dark:text-gray-400 font-mono text-xs whitespace-nowrap">{{ rec['timestamp'] }}</td>
+                        <td class="py-4 px-5">
+                            <p class="font-bold text-gray-900 dark:text-white">{{ rec['patient_name'] or 'Out-Patient' }}</p>
+                            <p class="text-xs text-gray-500">{{ rec['department'] }} ({{ rec['form_type'] }})</p>
+                        </td>
+                        <td class="py-4 px-5 font-bold text-amcprimary dark:text-amcteal">{{ rec['username'] }}</td>
+                        
+                        <td class="py-4 px-5">
+                            {% if rec['status'] == 'active' %}
+                                <span class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-200 dark:border-green-800">Active</span>
+                            {% else %}
+                                <span class="bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 px-3 py-1 rounded-full text-xs font-bold border border-orange-200 dark:border-orange-800">In Trash</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="py-4 px-5 text-right whitespace-nowrap">
+                            <!-- PERFECTED: IDE-Safe HTML5 Data Attributes! -->
+                            <button onclick="viewRecord(this)" 
+                                    data-patient="{{ rec['patient_name'] }}"
+                                    data-dept="{{ rec['department'] }}"
+                                    data-form="{{ rec['form_type'] }}"
+                                    data-date="{{ rec['date_admission'] }}"
+                                    data-contact="{{ rec['contact_number'] }}"
+                                    data-recommend="{{ rec['recommend'] }}"
+                                    data-compliments="{{ rec['compliments'] }}"
+                                    data-complaints="{{ rec['complaints'] }}"
+                                    data-stars="{{ rec['rating_5'] }}"
+                                    class="inline-block bg-amcprimary text-white px-4 py-2 rounded-xl font-bold text-xs hover:opacity-90 btn-premium shadow-md mr-2">
+                                View
+                            </button>
+                            
+                            {% if rec['status'] == 'active' %}
+                                <a href="/toggle_record/{{ rec['id'] }}/trash" class="inline-block bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 px-4 py-2 rounded-xl font-bold text-xs hover:bg-orange-200 btn-premium" onclick="return confirm('Move this record to Trash? It will be hidden from Analytics.');">Trash</a>
+                            {% else %}
+                                <a href="/toggle_record/{{ rec['id'] }}/restore" class="inline-block bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-4 py-2 rounded-xl font-bold text-xs hover:bg-green-200 btn-premium mr-2">Restore</a>
+                                <a href="/hard_delete/{{ rec['id'] }}" class="inline-block bg-red-600 text-white px-4 py-2 rounded-xl font-bold text-xs hover:bg-red-700 btn-premium shadow-md" onclick="return confirm('PERMANENTLY delete this record? This CANNOT be undone.');">Hard Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <tr id="empty-state" class="hidden">
+                        <td colspan="5" class="py-12 text-center text-gray-500 italic font-medium">No records found in this category.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW DETAILS MODAL -->
+<div id="viewModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 text-left">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('viewModal').classList.add('hidden')"></div>
+    <div class="bg-white dark:bg-darkcard rounded-3xl p-8 max-w-lg w-full relative z-10 shadow-2xl border border-gray-200 dark:border-gray-700 animate-slide-down max-h-[90vh] overflow-y-auto">
+        
+        <div class="flex justify-between items-start mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+            <div>
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white" id="modal-patient">Patient Name</h3>
+                <p class="text-sm font-bold text-amcprimary dark:text-amcteal" id="modal-dept">Department</p>
+            </div>
+            <button onclick="document.getElementById('viewModal').classList.add('hidden')" class="bg-gray-100 dark:bg-gray-800 p-2 rounded-full text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <div class="space-y-4 text-sm mb-6">
+            <p><span class="font-bold text-gray-500 dark:text-gray-400">Date:</span> <span id="modal-date" class="font-semibold dark:text-white"></span></p>
+            <p><span class="font-bold text-gray-500 dark:text-gray-400">Contact:</span> <span id="modal-contact" class="font-semibold dark:text-white"></span></p>
+            <p><span class="font-bold text-gray-500 dark:text-gray-400">Recommend:</span> <span id="modal-recommend" class="font-bold"></span></p>
+            
+            <div class="bg-gray-50 dark:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-gray-700 space-y-3">
+                <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest border-b border-gray-200 dark:border-gray-700 pb-1">Comments</p>
+                <p><span class="font-bold text-green-600">Compliments:</span> <br><span id="modal-compliments" class="italic text-gray-700 dark:text-gray-300"></span></p>
+                <p><span class="font-bold text-red-500">Complaints:</span> <br><span id="modal-complaints" class="italic text-gray-700 dark:text-gray-300"></span></p>
+            </div>
+
+            <div class="bg-amcprimary/5 dark:bg-slate-800 p-4 rounded-xl border border-amcprimary/10 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest">Overall Rating</p>
+                    <div class="flex text-amcorange" id="modal-stars"></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="document.getElementById('viewModal').classList.add('hidden')" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold py-3.5 rounded-xl btn-premium shadow-lg">Close</button>
+    </div>
+</div>
+
+<script>
+    function switchTab(status) {
+        const activeBtn = document.getElementById('tab-active');
+        const trashBtn = document.getElementById('tab-trashed');
+        
+        if (status === 'active') {
+            activeBtn.className = "flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm";
+            trashBtn.className = "flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white";
+        } else {
+            trashBtn.className = "flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm";
+            activeBtn.className = "flex-1 md:flex-none px-6 py-2.5 rounded-lg font-bold text-sm transition-all text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white";
+        }
+
+        const rows = document.querySelectorAll('.record-row');
+        let visibleCount = 0;
+        rows.forEach(row => {
+            if (row.classList.contains('row-' + status)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        document.getElementById('empty-state').style.display = (visibleCount === 0) ? '' : 'none';
+    }
+
+    // PERFECTED: Safe, IDE-friendly data extraction
+    function viewRecord(btn) {
+        document.getElementById('modal-patient').innerText = btn.getAttribute('data-patient') && btn.getAttribute('data-patient') !== 'None' ? btn.getAttribute('data-patient') : 'Out-Patient';
+        document.getElementById('modal-dept').innerText = btn.getAttribute('data-dept') + ' (' + btn.getAttribute('data-form') + ')';
+        document.getElementById('modal-date').innerText = btn.getAttribute('data-date');
+        document.getElementById('modal-contact').innerText = btn.getAttribute('data-contact') && btn.getAttribute('data-contact') !== 'None' ? btn.getAttribute('data-contact') : 'Not provided';
+        
+        const recommend = btn.getAttribute('data-recommend');
+        const recText = document.getElementById('modal-recommend');
+        recText.innerText = recommend;
+        recText.className = recommend === 'Yes' ? 'text-amcteal font-bold' : 'text-red-500 font-bold';
+
+        document.getElementById('modal-compliments').innerText = btn.getAttribute('data-compliments') && btn.getAttribute('data-compliments') !== 'None' ? btn.getAttribute('data-compliments') : 'None';
+        document.getElementById('modal-complaints').innerText = btn.getAttribute('data-complaints') && btn.getAttribute('data-complaints') !== 'None' ? btn.getAttribute('data-complaints') : 'None';
+
+        const stars = parseInt(btn.getAttribute('data-stars')) || 0;
+        let starHTML = '';
+        for(let i=0; i<stars; i++) {
+            starHTML += '<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+        }
+        document.getElementById('modal-stars').innerHTML = starHTML;
+
+        document.getElementById('viewModal').classList.remove('hidden');
+    }
+
+    switchTab('active');
+</script>
+{% endblock %}

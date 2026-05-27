@@ -14,10 +14,7 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { 
-                        amcprimary: '#004b72', amcteal: '#00838b', amcorange: '#f2a900', 
-                        darkbg: '#0f172a', darkcard: '#1e293b'
-                    },
+                    colors: { amcprimary: '#004b72', amcteal: '#00838b', amcorange: '#f2a900', darkbg: '#0f172a', darkcard: '#1e293b' },
                     animation: { 'slide-down': 'slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards' },
                     keyframes: { slideDown: { '0%': { opacity: 0, transform: 'translateY(-100%)' }, '100%': { opacity: 1, transform: 'translateY(0)' } } }
                 }
@@ -43,8 +40,11 @@
         .bg-grid { background-image: radial-gradient(rgba(0, 75, 114, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
         .dark .bg-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
 
-        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; }
-        .star-rating input { display: none; }
+        /* PERFECT TOOLTIP POSITIONING */
+        .hidden-req { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; position: relative; }
+        .star-rating input { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); opacity: 0; width: 1px; height: 1px; pointer-events: none; }
         .star-rating label { color: #d1d5db; cursor: pointer; transition: color 0.2s ease-in-out; }
         .dark .star-rating label { color: #475569; }
         .star-rating label:hover, .star-rating label:hover ~ label { color: #f2a900; }
@@ -72,23 +72,9 @@
         <div class="absolute bottom-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-gradient-to-tr from-amcprimary/20 to-transparent rounded-full blur-3xl"></div>
     </div>
 
-    <!-- Theme Toggle with PERFECTLY Symmetrical Icons -->
     <button id="theme-toggle" class="fixed bottom-6 right-6 z-50 glass-panel rounded-full p-4 btn-premium text-gray-600 dark:text-gray-300">
-        <!-- Moon Icon -->
         <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>
-        
-        <!-- Flawless Lucide Sun Icon -->
-        <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="m4.93 4.93 1.41 1.41"></path>
-            <path d="m17.66 17.66 1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="m6.34 17.66-1.41 1.41"></path>
-            <path d="m19.07 4.93-1.41 1.41"></path>
-        </svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
     </button>
 
     <main class="flex-grow flex flex-col justify-center items-center p-4 z-10 w-full animate-slide-down">

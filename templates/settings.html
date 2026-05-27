@@ -2,7 +2,6 @@
 {% block content %}
 <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden shadow-2xl transition-colors border border-gray-200 dark:border-gray-800">
     
-    <!-- HIGH VISIBILITY BACK BUTTON -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
         <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
@@ -20,6 +19,18 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Manage IT staff accounts and database records.</p>
         </div>
 
+        <!-- NEW: Data Management Portal -->
+        <a href="/manage_records" class="flex items-center justify-between bg-amcteal text-white p-6 rounded-2xl shadow-lg hover:shadow-xl btn-premium group">
+            <div>
+                <h3 class="text-xl font-black mb-1">Manage Feedback Records</h3>
+                <p class="text-sm text-white/80 font-medium">Archive bad data or permanently delete fake responses.</p>
+            </div>
+            <div class="bg-white/20 p-3 rounded-full group-active:scale-95 transition-transform hidden md:block">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            </div>
+        </a>
+
+        <!-- USER MANAGEMENT -->
         <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6 text-left">
             <h3 class="text-lg font-black text-gray-900 dark:text-white mb-4">Add IT Staff Account</h3>
             <form method="POST" action="/add_user" class="flex flex-col md:flex-row gap-3">
@@ -51,7 +62,6 @@
         <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 md:p-8 relative overflow-hidden text-left">
             <h3 class="text-xl font-black text-red-700 dark:text-red-400 mb-2">Danger Zone</h3>
             <p class="text-sm text-red-600/80 dark:text-red-400/80 mb-6 font-medium">This will permanently delete all patient feedback data from the database. This action cannot be undone.</p>
-            
             <button onclick="document.getElementById('resetModal').classList.remove('hidden')" class="bg-red-600 text-white px-6 py-3.5 rounded-xl font-bold btn-premium shadow-lg hover:bg-red-700 w-full md:w-auto text-center">
                 Factory Reset Database
             </button>
