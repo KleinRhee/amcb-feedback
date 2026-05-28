@@ -4,7 +4,8 @@ import csv
 import io
 import socket
 import re
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g, Response
+from waitress import serve  # <-- NEW: Production Server
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, Response, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
@@ -57,6 +58,11 @@ def get_local_ip():
         s.close()
         return ip
     except Exception: return "127.0.0.1"
+
+@app.route('/favicon.ico')
+def favicon():
+    """FIX: Satisfies Chrome's automatic request for a tab icon, preventing 404 errors in the console."""
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'logo.png', mimetype='image/png')
 
 @app.route('/')
 def index():
@@ -277,4 +283,17 @@ def reset_data():
     return redirect(url_for('system_settings'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=False)
+    # PERFECTED: Replaced Flask Development Server with Waitress Production Server
+    # This safely handles concurrent submissions and is 100% Windows-ready!
+    
+    # Get the local IP to print a helpful message in the terminal
+    local_ip = get_local_ip()
+    print("=========================================================")
+    print(" 🚀 AMC-B FEEDBACK SYSTEM RUNNING IN PRODUCTION MODE 🚀 ")
+    print(f" -> Local Mac/PC Access: http://localhost:5001")
+    print(f" -> Mobile/Network Access: http://{local_ip}:5001")
+    print("=========================================================")
+    print("Press CTRL+C to stop the server.")
+    
+    # Run the app using Waitress
+    serve(app, host='0.0.0.0', port=5001)
