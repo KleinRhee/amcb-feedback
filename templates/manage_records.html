@@ -54,7 +54,6 @@
                         </td>
                         
                         <td class="py-4 px-5 text-right whitespace-nowrap">
-                            <!-- PERFECTED: 100% Error-Free HTML5 Data Attributes! -->
                             <button onclick="viewRecord(this)" 
                                     data-patient="{{ rec['patient_name'] }}"
                                     data-dept="{{ rec['department'] }}"
@@ -121,15 +120,30 @@
                 <p><span class="font-bold text-gray-500 dark:text-gray-400 block text-xs uppercase">Source</span> <span id="modal-source" class="font-semibold dark:text-white"></span></p>
             </div>
 
-            <div class="bg-amcprimary/5 dark:bg-slate-800 p-5 rounded-xl border border-amcprimary/10 dark:border-gray-700 space-y-3">
-                <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest border-b border-gray-200/50 dark:border-gray-700 pb-2 mb-3">Star Ratings Breakdown</p>
-                <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">1. Honesty & Professionalism</span> <div class="flex text-amcorange" id="modal-r1"></div></div>
-                <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">2. Empathy, Care, Respect</span> <div class="flex text-amcorange" id="modal-r2"></div></div>
-                <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">3. Handled Responsibly</span> <div class="flex text-amcorange" id="modal-r3"></div></div>
-                <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">4. Attended Efficiently</span> <div class="flex text-amcorange" id="modal-r4"></div></div>
-                <div class="flex justify-between items-center pt-3 mt-3 border-t border-gray-200/50 dark:border-gray-700">
-                    <span class="font-bold text-gray-900 dark:text-white">5. Overall Satisfaction</span> 
-                    <div class="flex text-amcorange scale-110 origin-right" id="modal-r5"></div>
+            <!-- PERFECTED: Left-Aligned Star Breakdown -->
+            <div class="bg-amcprimary/5 dark:bg-slate-800 p-5 rounded-xl border border-amcprimary/10 dark:border-gray-700 space-y-4">
+                <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest border-b border-gray-200/50 dark:border-gray-700 pb-2 mb-2">Star Ratings Breakdown</p>
+                
+                <div class="mb-3">
+                    <span class="font-bold text-gray-800 dark:text-gray-200 text-xs sm:text-sm block mb-1">1. Honesty & Professionalism</span> 
+                    <div class="flex text-amcorange gap-0.5 justify-start" id="modal-r1"></div>
+                </div>
+                <div class="mb-3">
+                    <span class="font-bold text-gray-800 dark:text-gray-200 text-xs sm:text-sm block mb-1">2. Empathy, Care, Respect</span> 
+                    <div class="flex text-amcorange gap-0.5 justify-start" id="modal-r2"></div>
+                </div>
+                <div class="mb-3">
+                    <span class="font-bold text-gray-800 dark:text-gray-200 text-xs sm:text-sm block mb-1">3. Handled Responsibly</span> 
+                    <div class="flex text-amcorange gap-0.5 justify-start" id="modal-r3"></div>
+                </div>
+                <div class="mb-3">
+                    <span class="font-bold text-gray-800 dark:text-gray-200 text-xs sm:text-sm block mb-1">4. Attended Efficiently</span> 
+                    <div class="flex text-amcorange gap-0.5 justify-start" id="modal-r4"></div>
+                </div>
+                
+                <div class="pt-4 mt-4 border-t border-gray-200/50 dark:border-gray-700">
+                    <span class="font-black text-gray-900 dark:text-white text-sm sm:text-base block mb-2">5. Overall Satisfaction</span> 
+                    <div class="flex text-amcorange gap-0.5 scale-110 origin-left" id="modal-r5"></div>
                 </div>
             </div>
 
@@ -141,7 +155,6 @@
                 <p class="flex items-center"><span class="font-bold text-gray-500 dark:text-gray-400 uppercase text-xs mr-3">Would Recommend?</span> <span id="modal-recommend" class="font-bold px-3 py-1 rounded-full text-xs"></span></p>
             </div>
 
-            <!-- PERFECTED: Signature displays seamlessly across light/dark modes! -->
             <div id="modal-signature-container" class="hidden mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700">
                 <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest mb-2">Digital Signature</p>
                 <div class="bg-gray-100 dark:bg-slate-800 p-2 rounded-xl border border-gray-200 dark:border-gray-700 inline-block">
@@ -186,7 +199,7 @@
         let html = '';
         const count = parseInt(score) || 0;
         for(let i=0; i<count; i++) {
-            html += '<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+            html += '<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
         }
         if (count === 0) html = '<span class="text-xs text-gray-400 italic">No Rating</span>';
         return html;
@@ -228,7 +241,6 @@
         document.getElementById('modal-r4').innerHTML = getStarsHTML(btn.getAttribute('data-r4'));
         document.getElementById('modal-r5').innerHTML = getStarsHTML(btn.getAttribute('data-r5'));
 
-        // Handle Signature display securely
         const sig = btn.getAttribute('data-sig');
         const sigContainer = document.getElementById('modal-signature-container');
         const sigImg = document.getElementById('modal-signature-img');

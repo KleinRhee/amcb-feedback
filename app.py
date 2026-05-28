@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'amcb_secure_secret_key_2026'
+app.secret_key = 'amcb_secure_secret_key_2026_production'
 DATABASE = 'amcb_feedback.db'
 
 def get_db():
@@ -29,18 +29,12 @@ def init_db():
         db = get_db()
         cursor = db.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL)''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, form_type TEXT NOT NULL, admin_user_id INTEGER NOT NULL, department TEXT NOT NULL, date_admission TEXT NOT NULL, contact_number TEXT, rating_1 INTEGER, rating_2 INTEGER, rating_3 INTEGER, rating_4 INTEGER, rating_5 INTEGER, compliments TEXT, complaints TEXT, recommend TEXT, source TEXT, patient_name TEXT, room_number TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (admin_user_id) REFERENCES users (id))''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, form_type TEXT NOT NULL, admin_user_id INTEGER NOT NULL, department TEXT NOT NULL, date_admission TEXT NOT NULL, contact_number TEXT, rating_1 INTEGER, rating_2 INTEGER, rating_3 INTEGER, rating_4 INTEGER, rating_5 INTEGER, compliments TEXT, complaints TEXT, recommend TEXT, source TEXT, patient_name TEXT, room_number TEXT, timestamp DATETIME, signature TEXT, status TEXT DEFAULT 'active', FOREIGN KEY (admin_user_id) REFERENCES users (id))''')
         
-        # SMART MIGRATION: Add 'status' and 'signature' columns if they don't exist
-        try:
-            cursor.execute("ALTER TABLE feedback ADD COLUMN status TEXT DEFAULT 'active'")
-            db.commit()
-        except sqlite3.OperationalError: pass 
-            
-        try:
-            cursor.execute("ALTER TABLE feedback ADD COLUMN signature TEXT")
-            db.commit()
-        except sqlite3.OperationalError: pass
+        try: cursor.execute("ALTER TABLE feedback ADD COLUMN status TEXT DEFAULT 'active'")
+        except: pass 
+        try: cursor.execute("ALTER TABLE feedback ADD COLUMN signature TEXT")
+        except: pass
 
         cursor.execute("SELECT COUNT(*) as count FROM users")
         if cursor.fetchone()['count'] == 0:
@@ -118,11 +112,15 @@ def submit_feedback():
     if 'user_id' not in session: return redirect(url_for('login'))
     db = get_db()
     data = request.form
-    db.execute('''INSERT INTO feedback (form_type, admin_user_id, department, date_admission, contact_number, rating_1, rating_2, rating_3, rating_4, rating_5, compliments, complaints, recommend, source, patient_name, room_number, signature, status)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')''', 
+    
+    # PERFECTED: Forces the exact Local Time of your Mac/System instead of UTC!
+    current_local_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    db.execute('''INSERT INTO feedback (form_type, admin_user_id, department, date_admission, contact_number, rating_1, rating_2, rating_3, rating_4, rating_5, compliments, complaints, recommend, source, patient_name, room_number, signature, timestamp, status)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')''', 
                (data.get('form_type'), session['user_id'], data.get('department'), data.get('date_admission'), data.get('contact_number'), 
                 int(data.get('rating_0', 0)), int(data.get('rating_1', 0)), int(data.get('rating_2', 0)), int(data.get('rating_3', 0)), int(data.get('rating_4', 0)), 
-                data.get('compliments'), data.get('complaints'), data.get('recommend'), ", ".join(data.getlist('source[]')), data.get('patient_name', None), data.get('room_number', None), data.get('signature', None)))
+                data.get('compliments'), data.get('complaints'), data.get('recommend'), ", ".join(data.getlist('source[]')), data.get('patient_name', None), data.get('room_number', None), data.get('signature', None), current_local_time))
     db.commit()
     return redirect(url_for('thank_you'))
 
@@ -137,7 +135,7 @@ def admin_analytics():
     db = get_db()
     
     month_filter = request.args.get('month', '').strip()
-    tab_filter = request.args.get('tab', 'all').strip() # NEW: In-Patient vs Out-Patient Tab Filter
+    tab_filter = request.args.get('tab', 'all').strip()
     
     if month_filter and not re.match(r'^\d{4}-\d{2}$', month_filter): month_filter = ''
     if tab_filter not in ['all', 'in-patient', 'out-patient']: tab_filter = 'all'
@@ -148,7 +146,6 @@ def admin_analytics():
     if month_filter:
         base_where += " AND timestamp LIKE ?"
         params.append(f"{month_filter}%")
-    
     if tab_filter != 'all':
         base_where += " AND form_type = ?"
         params.append(tab_filter)
@@ -209,7 +206,7 @@ def export_csv():
     
     si = io.StringIO()
     writer = csv.writer(si)
-    writer.writerow(['ID', 'Form Type', 'Admin', 'Department', 'Date', 'Contact', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5_Overall', 'Compliments', 'Complaints', 'Recommend', 'Source', 'Patient Name', 'Room Number', 'Timestamp'])
+    writer.writerow(['ID', 'Form Type', 'Admin', 'Department', 'Date', 'Contact', 'Q1_Honesty', 'Q2_Empathy', 'Q3_Responsibility', 'Q4_Efficiency', 'Q5_Overall', 'Compliments', 'Complaints', 'Recommend', 'Source', 'Patient Name', 'Room Number', 'Timestamp'])
     for row in data: writer.writerow([row['id'], row['form_type'], row['username'], row['department'], row['date_admission'], row['contact_number'], row['rating_1'], row['rating_2'], row['rating_3'], row['rating_4'], row['rating_5'], row['compliments'], row['complaints'], row['recommend'], row['source'], row['patient_name'], row['room_number'], row['timestamp']])
     
     output = Response(si.getvalue(), mimetype='text/csv')
@@ -280,4 +277,4 @@ def reset_data():
     return redirect(url_for('system_settings'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=False)

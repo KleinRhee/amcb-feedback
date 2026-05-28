@@ -6,7 +6,7 @@
     <div class="glass-panel p-6 md:p-8 rounded-[2rem] shadow-sm mb-8 relative">
         
         <div class="flex justify-start w-full mb-6">
-            <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-800 text-amcprimary dark:text-amcteal font-bold rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
+            <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
                 <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> Dashboard
             </a>
         </div>
@@ -18,7 +18,6 @@
             </div>
             
             <div class="flex flex-col sm:flex-row justify-center items-center gap-3 w-full lg:w-auto">
-                <!-- FORM TYPE TAB FILTER (All / In-Patient / Out-Patient) -->
                 <form method="GET" action="/admin" class="flex flex-col md:flex-row gap-2 w-full justify-center">
                     
                     <div class="flex bg-gray-200 dark:bg-slate-800 p-1.5 rounded-xl border border-gray-300 dark:border-slate-600">
@@ -27,16 +26,21 @@
                         <button type="submit" name="tab" value="out-patient" class="flex-1 px-4 py-2 rounded-lg font-bold text-sm transition-all {% if current_tab == 'out-patient' %}bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm{% else %}text-gray-500 dark:text-gray-400 hover:text-gray-900{% endif %}">Out-Patient</button>
                     </div>
 
-                    <!-- Carry over the tab state in a hidden input so the Month filter respects it! -->
                     <input type="hidden" name="tab" value="{{ current_tab }}">
 
                     <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
-                        <select name="month" class="w-full sm:w-auto bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-white px-4 py-2.5 rounded-xl font-bold outline-none shadow-sm focus:ring-2 focus:ring-amcteal cursor-pointer text-center sm:text-left transition-colors">
-                            <option value="">All Time</option>
-                            {% for m in available_months %}
-                                <option value="{{ m }}" {% if current_month == m %}selected{% endif %}>{{ m }}</option>
-                            {% endfor %}
-                        </select>
+                        <!-- PERFECTED: Custom Checkbox Chevron -->
+                        <div class="relative w-full sm:w-auto">
+                            <select name="month" class="w-full h-full bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-white px-4 pr-10 py-2.5 rounded-xl font-bold outline-none shadow-sm focus:ring-2 focus:ring-amcteal cursor-pointer text-center sm:text-left transition-colors appearance-none">
+                                <option value="">All Time</option>
+                                {% for m in available_months %}
+                                    <option value="{{ m }}" {% if current_month == m %}selected{% endif %}>{{ m }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500 dark:text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
                         <button type="submit" class="bg-amcteal text-white px-5 py-2.5 rounded-xl font-bold btn-premium shadow-md hover:bg-opacity-90 flex items-center justify-center">
                             Filter
                         </button>

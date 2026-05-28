@@ -14,7 +14,10 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { amcprimary: '#004b72', amcteal: '#00838b', amcorange: '#f2a900', darkbg: '#0f172a', darkcard: '#1e293b' },
+                    colors: { 
+                        amcprimary: '#004b72', amcteal: '#00838b', amcorange: '#f2a900', 
+                        darkbg: '#0f172a', darkcard: '#1e293b'
+                    },
                     animation: { 'slide-down': 'slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards' },
                     keyframes: { slideDown: { '0%': { opacity: 0, transform: 'translateY(-100%)' }, '100%': { opacity: 1, transform: 'translateY(0)' } } }
                 }
@@ -40,9 +43,10 @@
         .bg-grid { background-image: radial-gradient(rgba(0, 75, 114, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
         .dark .bg-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
 
-        /* PERFECT TOOLTIP POSITIONING */
-        .hidden-req { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+        /* PERFECTED: Force the Native Calendar Icon to invert in Dark Mode */
+        .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(90%); cursor: pointer; }
 
+        /* PERFECTED: Star Validation Anchor */
         .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; position: relative; }
         .star-rating input { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); opacity: 0; width: 1px; height: 1px; pointer-events: none; }
         .star-rating label { color: #d1d5db; cursor: pointer; transition: color 0.2s ease-in-out; }

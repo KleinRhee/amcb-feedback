@@ -23,7 +23,7 @@
             </p>
         </div>
 
-        <form id="feedbackForm" method="POST" action="/submit_feedback" class="space-y-7 relative z-10 text-left">
+        <form id="feedbackForm" autocomplete="off" method="POST" action="/submit_feedback" class="space-y-7 relative z-10 text-left">
             <input type="hidden" name="form_type" id="form_type" value="{{ form_type }}">
             <input type="hidden" name="signature" id="signature_data">
 
@@ -50,21 +50,31 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Department <span class="text-red-500">*</span></label>
-                        <select name="department" id="department" required class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium appearance-none">
-                            <option value="" disabled selected>Tap to select...</option>
-                            {% for dept in departments %}
-                                <option value="{{ dept }}">{{ dept }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="relative">
+                            <select name="department" id="department" required class="w-full p-4 pr-10 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium appearance-none cursor-pointer">
+                                <option value="" disabled selected>Tap to select...</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept }}">{{ dept }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500 dark:text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 {% if form_type == 'in-patient' %}
                 <div>
                     <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Room Number <span class="text-red-500">*</span></label>
-                    <select name="room_number" id="room_number" required disabled class="w-full p-4 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcorange outline-none transition-all shadow-sm text-gray-500 dark:text-gray-400 font-medium appearance-none opacity-50 cursor-not-allowed">
-                        <option value="" disabled selected>Select Department First</option>
-                    </select>
+                    <div class="relative">
+                        <select name="room_number" id="room_number" required disabled class="w-full p-4 pr-10 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcorange outline-none transition-all shadow-sm text-gray-500 dark:text-gray-400 font-medium appearance-none opacity-50 cursor-not-allowed">
+                            <option value="" disabled selected>Select Department First</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500 dark:text-gray-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
@@ -118,19 +128,20 @@
             </div>
 
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
-                <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4">Would you recommend AMC-B? <span class="text-red-500">*</span></label>
-                <div class="flex flex-col md:flex-row gap-4">
-                    <label class="relative flex-1 cursor-pointer">
-                        <input type="radio" name="recommend" value="Yes" required class="peer hidden-req">
-                        <div class="w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight peer-checked:border-amcteal peer-checked:bg-amcteal/10 peer-checked:text-amcteal peer-active:scale-95 transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                            Yes, absolutely
-                        </div>
+                <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4 w-full">Would you recommend AMC-B? <span class="text-red-500">*</span></label>
+                <div class="relative w-full flex flex-col md:flex-row gap-4">
+                    
+                    <!-- PERFECTED: Un-biased Tooltips safely locked to the absolute bottom center! -->
+                    <input type="radio" id="rec_yes" name="recommend" value="Yes" required class="peer/yes hidden-req outline-none focus:ring-0 appearance-none">
+                    <input type="radio" id="rec_no" name="recommend" value="No" required class="peer/no hidden-req outline-none focus:ring-0 appearance-none">
+                    
+                    <!-- PERFECTED: Removed hover classes from mobile, forced peer-checked colors to strictly override so there is no gray "stickiness" -->
+                    <label for="rec_yes" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/yes:!border-amcteal peer-checked/yes:!bg-amcteal/10 peer-checked/yes:!text-amcteal active:scale-95">
+                        Yes, absolutely
                     </label>
-                    <label class="relative flex-1 cursor-pointer">
-                        <input type="radio" name="recommend" value="No" required class="peer hidden-req">
-                        <div class="w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight peer-checked:border-red-500 peer-checked:bg-red-50 dark:peer-checked:bg-red-900/20 peer-checked:text-red-500 peer-active:scale-95 transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50">
-                            No
-                        </div>
+
+                    <label for="rec_no" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/no:!border-red-500 peer-checked/no:!bg-red-50 dark:peer-checked/no:!bg-red-900/20 peer-checked/no:!text-red-500 active:scale-95">
+                        No
                     </label>
                 </div>
             </div>
@@ -144,8 +155,10 @@
                     {% set sources = ["Newspaper", "Signages", "TV / Radio", "Social Media", "Website", "Friends / Relative", "Events", "Other"] %}
                     {% for src in sources %}
                     <label class="relative cursor-pointer h-full block">
-                        <input type="checkbox" name="source[]" value="{{ src }}" class="peer hidden-req">
-                        <div class="w-full h-full min-h-[3.5rem] flex items-center justify-center px-2 py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-[13px] sm:text-sm leading-tight peer-checked:border-amcprimary peer-checked:bg-amcprimary peer-checked:text-white peer-active:scale-95 transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                        <!-- PERFECTED: Removed focus rings -->
+                        <input type="checkbox" name="source[]" value="{{ src }}" class="peer hidden-req outline-none focus:ring-0 appearance-none">
+                        <!-- PERFECTED: Forced !bg-amcprimary to override mobile hover stickiness -->
+                        <div class="select-none w-full h-full min-h-[3.5rem] flex items-center justify-center px-2 py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-[13px] sm:text-sm leading-tight peer-checked:!border-amcprimary peer-checked:!bg-amcprimary peer-checked:!text-white active:scale-95 transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50">
                             <span class="whitespace-normal break-words">{{ src }}</span>
                         </div>
                     </label>
@@ -161,7 +174,6 @@
                     </div>
                     <button type="button" id="clear-signature" class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full hover:bg-red-100 transition-colors btn-premium">Clear</button>
                 </div>
-                <!-- PERFECTED: Added dark:invert directly to canvas. It internally draws black, but displays white to user in dark mode -->
                 <div class="w-full bg-white dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-2xl overflow-hidden relative shadow-inner touch-none" style="height: 200px;">
                     <canvas id="signature-pad" class="absolute inset-0 w-full h-full dark:invert"></canvas>
                 </div>
@@ -208,25 +220,23 @@
         });
     }
 
-    // PERFECTED: Signature Pad Always uses Black Ink internally. 
     const canvas = document.getElementById('signature-pad');
     const signaturePad = new SignaturePad(canvas, {
-        backgroundColor: 'rgba(255, 255, 255, 0)', // Transparent
-        penColor: '#000000' // ALWAYS BLACK
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        penColor: '#000000' 
     });
 
-    // PERFECTED: Prevents keyboard popups on mobile from erasing the signature!
     function resizeCanvas() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         let data = null;
-        if (!signaturePad.isEmpty()) { data = signaturePad.toData(); } // Save data before resize
+        if (!signaturePad.isEmpty()) { data = signaturePad.toData(); } 
         
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
         canvas.getContext("2d").scale(ratio, ratio);
         signaturePad.clear();
         
-        if (data) { signaturePad.fromData(data); } // Restore data after resize
+        if (data) { signaturePad.fromData(data); } 
     }
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
@@ -242,7 +252,6 @@
             document.getElementById('sig-error').classList.remove('hidden');
             canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-            // Saves Black ink on Transparent Background
             document.getElementById('signature_data').value = signaturePad.toDataURL('image/png');
         }
     });
