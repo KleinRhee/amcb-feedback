@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+
 <div class="w-full max-w-lg glass-panel rounded-[2rem] shadow-2xl my-6 transition-colors border border-gray-200 dark:border-gray-800 overflow-hidden relative">
     
     <div class="flex items-center justify-between px-4 py-4 bg-white/60 dark:bg-black/40 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-20 backdrop-blur-md">
@@ -21,8 +23,9 @@
             </p>
         </div>
 
-        <form method="POST" action="/submit_feedback" class="space-y-7 relative z-10 text-left">
-            <input type="hidden" name="form_type" value="{{ form_type }}">
+        <form id="feedbackForm" method="POST" action="/submit_feedback" class="space-y-7 relative z-10 text-left">
+            <input type="hidden" name="form_type" id="form_type" value="{{ form_type }}">
+            <input type="hidden" name="signature" id="signature_data">
 
             <div class="space-y-5">
                 {% if form_type == 'in-patient' %}
@@ -33,7 +36,7 @@
                 {% endif %}
                 <div>
                     <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Contact Number</label>
-                    <input type="tel" name="contact_number" placeholder="Optional" class="w-full p-4 bg-white/70 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium">
+                    <input type="tel" name="contact_number" placeholder="(Optional)" class="w-full p-4 bg-white/70 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium">
                 </div>
             </div>
 
@@ -47,7 +50,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Department <span class="text-red-500">*</span></label>
-                        <select name="department" required class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium appearance-none">
+                        <select name="department" id="department" required class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium appearance-none">
                             <option value="" disabled selected>Tap to select...</option>
                             {% for dept in departments %}
                                 <option value="{{ dept }}">{{ dept }}</option>
@@ -59,18 +62,25 @@
                 {% if form_type == 'in-patient' %}
                 <div>
                     <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Room Number <span class="text-red-500">*</span></label>
-                    <input type="text" name="room_number" required placeholder="e.g. 101" class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcorange outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium">
+                    <select name="room_number" id="room_number" required disabled class="w-full p-4 bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcorange outline-none transition-all shadow-sm text-gray-500 dark:text-gray-400 font-medium appearance-none opacity-50 cursor-not-allowed">
+                        <option value="" disabled selected>Select Department First</option>
+                    </select>
                 </div>
                 {% endif %}
             </div>
 
             <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex flex-col mb-6 gap-2 text-left">
+                <div class="flex flex-col mb-6 gap-3 text-left">
                     <h3 class="text-xl font-black text-gray-900 dark:text-white tracking-tight">Service Ratings</h3>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs font-bold text-gray-600 dark:text-gray-400 bg-gray-100/80 dark:bg-slate-800/80 px-4 py-3 rounded-xl w-full md:w-fit mt-1 border border-gray-200/50 dark:border-slate-700">
-                        <span class="flex items-center"><svg class="w-4 h-4 text-amcorange mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg> 1 = Needs Improvement</span>
-                        <span class="hidden sm:inline text-gray-300 dark:text-gray-600">|</span>
-                        <span class="flex items-center"><svg class="w-4 h-4 text-amcorange mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg> 5 = Excellent</span>
+                    <div class="bg-gray-50/50 dark:bg-slate-800/30 p-4 rounded-2xl border border-gray-100 dark:border-slate-700/50 shadow-inner">
+                        <p class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-3">Rating Scale Reference</p>
+                        <div class="flex flex-wrap gap-2.5">
+                            <div class="flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 pl-1.5 pr-3 py-1.5 rounded-xl shadow-sm"><div class="flex items-center justify-center bg-amcorange/15 text-amcorange rounded-lg px-2 py-1 mr-2"><span class="font-black text-xs leading-none">1</span><svg class="w-3 h-3 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="text-xs font-bold text-gray-700 dark:text-gray-300">Needs Improvement</span></div>
+                            <div class="flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 pl-1.5 pr-3 py-1.5 rounded-xl shadow-sm"><div class="flex items-center justify-center bg-amcorange/15 text-amcorange rounded-lg px-2 py-1 mr-2"><span class="font-black text-xs leading-none">2</span><svg class="w-3 h-3 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="text-xs font-bold text-gray-700 dark:text-gray-300">Satisfactory</span></div>
+                            <div class="flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 pl-1.5 pr-3 py-1.5 rounded-xl shadow-sm"><div class="flex items-center justify-center bg-amcorange/15 text-amcorange rounded-lg px-2 py-1 mr-2"><span class="font-black text-xs leading-none">3</span><svg class="w-3 h-3 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="text-xs font-bold text-gray-700 dark:text-gray-300">Good</span></div>
+                            <div class="flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 pl-1.5 pr-3 py-1.5 rounded-xl shadow-sm"><div class="flex items-center justify-center bg-amcorange/15 text-amcorange rounded-lg px-2 py-1 mr-2"><span class="font-black text-xs leading-none">4</span><svg class="w-3 h-3 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="text-xs font-bold text-gray-700 dark:text-gray-300">Very Good</span></div>
+                            <div class="flex items-center bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 pl-1.5 pr-3 py-1.5 rounded-xl shadow-sm"><div class="flex items-center justify-center bg-amcorange/15 text-amcorange rounded-lg px-2 py-1 mr-2"><span class="font-black text-xs leading-none">5</span><svg class="w-3 h-3 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></div><span class="text-xs font-bold text-gray-700 dark:text-gray-300">Excellent</span></div>
+                        </div>
                     </div>
                 </div>
                 
@@ -107,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- FIXED: Hidden-req on Recommend Inputs -->
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
                 <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4">Would you recommend AMC-B? <span class="text-red-500">*</span></label>
                 <div class="flex flex-col md:flex-row gap-4">
@@ -126,9 +135,11 @@
                 </div>
             </div>
 
-            <!-- FIXED: Hidden-req on Source Checkboxes -->
             <div class="pt-8 text-left">
-                <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4">How did you hear about us?</label>
+                <div class="mb-4">
+                    <label class="block text-base font-bold text-gray-800 dark:text-gray-200">How did you hear about us?</label>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium italic">Optional. You may select multiple options.</p>
+                </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {% set sources = ["Newspaper", "Signages", "TV / Radio", "Social Media", "Website", "Friends / Relative", "Events", "Other"] %}
                     {% for src in sources %}
@@ -142,6 +153,21 @@
                 </div>
             </div>
 
+            <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
+                <div class="mb-4 flex justify-between items-end">
+                    <div>
+                        <label class="block text-base font-bold text-gray-800 dark:text-gray-200">Digital Signature <span class="text-red-500">*</span></label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">Please sign inside the box below to confirm your feedback.</p>
+                    </div>
+                    <button type="button" id="clear-signature" class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full hover:bg-red-100 transition-colors btn-premium">Clear</button>
+                </div>
+                <!-- PERFECTED: Added dark:invert directly to canvas. It internally draws black, but displays white to user in dark mode -->
+                <div class="w-full bg-white dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-2xl overflow-hidden relative shadow-inner touch-none" style="height: 200px;">
+                    <canvas id="signature-pad" class="absolute inset-0 w-full h-full dark:invert"></canvas>
+                </div>
+                <p id="sig-error" class="hidden text-xs font-bold text-red-500 mt-2 animate-pulse">A signature is required to submit this form.</p>
+            </div>
+
             <button type="submit" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 p-5 rounded-2xl font-black text-lg hover:opacity-90 active:scale-95 transition-all mt-10 shadow-2xl hover:shadow-amcprimary/30 flex items-center justify-center">
                 Submit Feedback
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -149,4 +175,76 @@
         </form>
     </div>
 </div>
+
+<script>
+    const formType = document.getElementById('form_type').value;
+    
+    if (formType === 'in-patient') {
+        const deptSelect = document.getElementById('department');
+        const roomSelect = document.getElementById('room_number');
+
+        const roomData = {
+            "PCU 4": ["4W01", "4W02", "4W03", "4W04"],
+            "PCU 1": ["TBA"], "PCU 2": ["TBA"], "PCU 3": ["TBA"], "PCU 5": ["TBA"],
+            "ICU": ["TBA"], "LR/DR": ["TBA"], "NIICU": ["TBA"]
+        };
+
+        deptSelect.addEventListener('change', function() {
+            const selectedDept = this.value;
+            roomSelect.innerHTML = '<option value="" disabled selected>Select Room Number...</option>';
+            if (selectedDept && roomData[selectedDept]) {
+                roomData[selectedDept].forEach(function(room) {
+                    const option = document.createElement('option');
+                    option.value = room;
+                    option.textContent = room;
+                    roomSelect.appendChild(option);
+                });
+                roomSelect.disabled = false;
+                roomSelect.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-100', 'dark:bg-slate-800');
+                roomSelect.classList.add('bg-white', 'dark:bg-slate-900', 'cursor-pointer');
+            } else {
+                roomSelect.disabled = true;
+            }
+        });
+    }
+
+    // PERFECTED: Signature Pad Always uses Black Ink internally. 
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgba(255, 255, 255, 0)', // Transparent
+        penColor: '#000000' // ALWAYS BLACK
+    });
+
+    // PERFECTED: Prevents keyboard popups on mobile from erasing the signature!
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        let data = null;
+        if (!signaturePad.isEmpty()) { data = signaturePad.toData(); } // Save data before resize
+        
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
+        
+        if (data) { signaturePad.fromData(data); } // Restore data after resize
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    document.getElementById('clear-signature').addEventListener('click', function () {
+        signaturePad.clear();
+        document.getElementById('sig-error').classList.add('hidden');
+    });
+
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+        if (signaturePad.isEmpty()) {
+            event.preventDefault();
+            document.getElementById('sig-error').classList.remove('hidden');
+            canvas.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            // Saves Black ink on Transparent Background
+            document.getElementById('signature_data').value = signaturePad.toDataURL('image/png');
+        }
+    });
+</script>
 {% endblock %}

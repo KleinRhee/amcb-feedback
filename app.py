@@ -31,12 +31,17 @@ def init_db():
         cursor.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL)''')
         cursor.execute('''CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, form_type TEXT NOT NULL, admin_user_id INTEGER NOT NULL, department TEXT NOT NULL, date_admission TEXT NOT NULL, contact_number TEXT, rating_1 INTEGER, rating_2 INTEGER, rating_3 INTEGER, rating_4 INTEGER, rating_5 INTEGER, compliments TEXT, complaints TEXT, recommend TEXT, source TEXT, patient_name TEXT, room_number TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (admin_user_id) REFERENCES users (id))''')
         
+        # SMART MIGRATION: Add 'status' and 'signature' columns if they don't exist
         try:
             cursor.execute("ALTER TABLE feedback ADD COLUMN status TEXT DEFAULT 'active'")
             db.commit()
-        except sqlite3.OperationalError:
-            pass 
+        except sqlite3.OperationalError: pass 
             
+        try:
+            cursor.execute("ALTER TABLE feedback ADD COLUMN signature TEXT")
+            db.commit()
+        except sqlite3.OperationalError: pass
+
         cursor.execute("SELECT COUNT(*) as count FROM users")
         if cursor.fetchone()['count'] == 0:
             default_password = generate_password_hash('password123')
@@ -113,11 +118,11 @@ def submit_feedback():
     if 'user_id' not in session: return redirect(url_for('login'))
     db = get_db()
     data = request.form
-    db.execute('''INSERT INTO feedback (form_type, admin_user_id, department, date_admission, contact_number, rating_1, rating_2, rating_3, rating_4, rating_5, compliments, complaints, recommend, source, patient_name, room_number, status)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')''', 
+    db.execute('''INSERT INTO feedback (form_type, admin_user_id, department, date_admission, contact_number, rating_1, rating_2, rating_3, rating_4, rating_5, compliments, complaints, recommend, source, patient_name, room_number, signature, status)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')''', 
                (data.get('form_type'), session['user_id'], data.get('department'), data.get('date_admission'), data.get('contact_number'), 
                 int(data.get('rating_0', 0)), int(data.get('rating_1', 0)), int(data.get('rating_2', 0)), int(data.get('rating_3', 0)), int(data.get('rating_4', 0)), 
-                data.get('compliments'), data.get('complaints'), data.get('recommend'), ", ".join(data.getlist('source[]')), data.get('patient_name', None), data.get('room_number', None)))
+                data.get('compliments'), data.get('complaints'), data.get('recommend'), ", ".join(data.getlist('source[]')), data.get('patient_name', None), data.get('room_number', None), data.get('signature', None)))
     db.commit()
     return redirect(url_for('thank_you'))
 
@@ -130,22 +135,33 @@ def thank_you():
 def admin_analytics():
     if 'user_id' not in session: return redirect(url_for('login'))
     db = get_db()
+    
     month_filter = request.args.get('month', '').strip()
+    tab_filter = request.args.get('tab', 'all').strip() # NEW: In-Patient vs Out-Patient Tab Filter
+    
     if month_filter and not re.match(r'^\d{4}-\d{2}$', month_filter): month_filter = ''
+    if tab_filter not in ['all', 'in-patient', 'out-patient']: tab_filter = 'all'
         
     base_where = "WHERE status = 'active'"
     params = []
+    
     if month_filter:
         base_where += " AND timestamp LIKE ?"
         params.append(f"{month_filter}%")
+    
+    if tab_filter != 'all':
+        base_where += " AND form_type = ?"
+        params.append(tab_filter)
+        
     params = tuple(params)
 
     total_feedback = db.execute(f"SELECT COUNT(*) as count FROM feedback {base_where}", params).fetchone()['count']
     
     staff_query = f"SELECT users.username, COUNT(feedback.id) as count FROM users LEFT JOIN feedback ON users.id = feedback.admin_user_id AND feedback.status = 'active'"
-    if month_filter: staff_query += " AND feedback.timestamp LIKE ?"
+    if month_filter: staff_query += f" AND feedback.timestamp LIKE '{month_filter}%'"
+    if tab_filter != 'all': staff_query += f" AND feedback.form_type = '{tab_filter}'"
     staff_query += " GROUP BY users.username ORDER BY count DESC"
-    staff_breakdown = [dict(row) for row in db.execute(staff_query, params).fetchall()]
+    staff_breakdown = [dict(row) for row in db.execute(staff_query).fetchall()]
     
     recent_comments = [dict(row) for row in db.execute(f"SELECT department, compliments, complaints, timestamp FROM feedback {base_where} AND (compliments != '' OR complaints != '') ORDER BY timestamp DESC LIMIT 8", params).fetchall()]
     
@@ -166,19 +182,26 @@ def admin_analytics():
             
     months_raw = db.execute("SELECT DISTINCT strftime('%Y-%m', timestamp) as month FROM feedback WHERE status = 'active' ORDER BY month DESC").fetchall()
     
-    return render_template('analytics.html', total_feedback=total_feedback, overall_avg=overall_avg, recommend_percent=recommend_percent, staff_breakdown=staff_breakdown, recent_comments=recent_comments, avg_ratings=avg_ratings, dept_labels=[row['department'] for row in dept_rows], dept_counts=[row['count'] for row in dept_rows], source_labels=list(source_dict.keys()), source_counts=list(source_dict.values()), available_months=[row['month'] for row in months_raw if row['month']], current_month=month_filter)
+    return render_template('analytics.html', total_feedback=total_feedback, overall_avg=overall_avg, recommend_percent=recommend_percent, staff_breakdown=staff_breakdown, recent_comments=recent_comments, avg_ratings=avg_ratings, dept_labels=[row['department'] for row in dept_rows], dept_counts=[row['count'] for row in dept_rows], source_labels=list(source_dict.keys()), source_counts=list(source_dict.values()), available_months=[row['month'] for row in months_raw if row['month']], current_month=month_filter, current_tab=tab_filter)
 
 @app.route('/export')
 def export_csv():
     if 'user_id' not in session: return redirect(url_for('login'))
     month_filter = request.args.get('month', '').strip()
+    tab_filter = request.args.get('tab', 'all').strip()
+    
     if month_filter and not re.match(r'^\d{4}-\d{2}$', month_filter): month_filter = ''
         
     query = "SELECT f.*, u.username FROM feedback f JOIN users u ON f.admin_user_id = u.id WHERE f.status = 'active'"
     params = []
+    
     if month_filter: 
         query += " AND f.timestamp LIKE ?"
         params.append(f"{month_filter}%")
+    if tab_filter != 'all':
+        query += " AND f.form_type = ?"
+        params.append(tab_filter)
+        
     query += " ORDER BY f.timestamp DESC"
     
     db = get_db()
@@ -190,29 +213,24 @@ def export_csv():
     for row in data: writer.writerow([row['id'], row['form_type'], row['username'], row['department'], row['date_admission'], row['contact_number'], row['rating_1'], row['rating_2'], row['rating_3'], row['rating_4'], row['rating_5'], row['compliments'], row['complaints'], row['recommend'], row['source'], row['patient_name'], row['room_number'], row['timestamp']])
     
     output = Response(si.getvalue(), mimetype='text/csv')
-    output.headers["Content-Disposition"] = f"attachment; filename=amcb_export_{month_filter or 'ALL'}.csv"
+    output.headers["Content-Disposition"] = f"attachment; filename=amcb_export_{tab_filter}_{month_filter or 'ALL'}.csv"
     return output
 
 @app.route('/manage_records')
 def manage_records():
     if session.get('username') != 'it_super': return redirect(url_for('dashboard'))
     db = get_db()
-    # FETCH ALL FIELDS FOR THE VIEW MODAL
     records = db.execute("SELECT f.*, u.username FROM feedback f JOIN users u ON f.admin_user_id = u.id ORDER BY f.timestamp DESC").fetchall()
     return render_template('manage_records.html', records=records)
 
 @app.route('/toggle_record/<int:record_id>/<action>')
 def toggle_record(record_id, action):
     if session.get('username') != 'it_super': return redirect(url_for('dashboard'))
-    # HCI UPDATE: Trashed vs Active
     new_status = 'trashed' if action == 'trash' else 'active'
     db = get_db()
     db.execute("UPDATE feedback SET status = ? WHERE id = ?", (new_status, record_id))
     db.commit()
-    if new_status == 'trashed':
-        flash("Record moved to Trash.", "success")
-    else:
-        flash("Record restored successfully.", "success")
+    flash("Record moved to Trash." if new_status == 'trashed' else "Record restored successfully.", "success")
     return redirect(url_for('manage_records'))
 
 @app.route('/hard_delete/<int:record_id>')

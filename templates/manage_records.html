@@ -54,7 +54,7 @@
                         </td>
                         
                         <td class="py-4 px-5 text-right whitespace-nowrap">
-                            <!-- PERFECTED: Now passes EVERY single data point safely to the JS function -->
+                            <!-- PERFECTED: 100% Error-Free HTML5 Data Attributes! -->
                             <button onclick="viewRecord(this)" 
                                     data-patient="{{ rec['patient_name'] }}"
                                     data-dept="{{ rec['department'] }}"
@@ -71,6 +71,7 @@
                                     data-r3="{{ rec['rating_3'] }}"
                                     data-r4="{{ rec['rating_4'] }}"
                                     data-r5="{{ rec['rating_5'] }}"
+                                    data-sig="{{ rec['signature'] }}"
                                     class="inline-block bg-amcprimary text-white px-4 py-2 rounded-xl font-bold text-xs hover:opacity-90 btn-premium shadow-md mr-2">
                                 View
                             </button>
@@ -111,7 +112,6 @@
 
         <div class="space-y-6 text-sm mb-6">
             
-            <!-- Context Block -->
             <div class="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50">
                 <p><span class="font-bold text-gray-500 dark:text-gray-400 block text-xs uppercase">Date</span> <span id="modal-date" class="font-semibold dark:text-white"></span></p>
                 <p><span class="font-bold text-gray-500 dark:text-gray-400 block text-xs uppercase">Contact</span> <span id="modal-contact" class="font-semibold dark:text-white"></span></p>
@@ -121,28 +121,32 @@
                 <p><span class="font-bold text-gray-500 dark:text-gray-400 block text-xs uppercase">Source</span> <span id="modal-source" class="font-semibold dark:text-white"></span></p>
             </div>
 
-            <!-- Full Ratings Breakdown -->
             <div class="bg-amcprimary/5 dark:bg-slate-800 p-5 rounded-xl border border-amcprimary/10 dark:border-gray-700 space-y-3">
                 <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest border-b border-gray-200/50 dark:border-gray-700 pb-2 mb-3">Star Ratings Breakdown</p>
-                
                 <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">1. Honesty & Professionalism</span> <div class="flex text-amcorange" id="modal-r1"></div></div>
                 <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">2. Empathy, Care, Respect</span> <div class="flex text-amcorange" id="modal-r2"></div></div>
                 <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">3. Handled Responsibly</span> <div class="flex text-amcorange" id="modal-r3"></div></div>
                 <div class="flex justify-between items-center"><span class="font-medium text-gray-700 dark:text-gray-300 text-xs sm:text-sm">4. Attended Efficiently</span> <div class="flex text-amcorange" id="modal-r4"></div></div>
-                
                 <div class="flex justify-between items-center pt-3 mt-3 border-t border-gray-200/50 dark:border-gray-700">
                     <span class="font-bold text-gray-900 dark:text-white">5. Overall Satisfaction</span> 
                     <div class="flex text-amcorange scale-110 origin-right" id="modal-r5"></div>
                 </div>
             </div>
 
-            <!-- Qualitative & Recommendation -->
             <div class="bg-gray-50 dark:bg-slate-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700/50 space-y-4">
                 <p><span class="font-bold text-green-600 block text-xs uppercase tracking-widest mb-1">Compliments</span> <span id="modal-compliments" class="italic text-gray-700 dark:text-gray-300"></span></p>
                 <hr class="border-gray-200 dark:border-gray-700">
                 <p><span class="font-bold text-red-500 block text-xs uppercase tracking-widest mb-1">Complaints</span> <span id="modal-complaints" class="italic text-gray-700 dark:text-gray-300"></span></p>
                 <hr class="border-gray-200 dark:border-gray-700">
                 <p class="flex items-center"><span class="font-bold text-gray-500 dark:text-gray-400 uppercase text-xs mr-3">Would Recommend?</span> <span id="modal-recommend" class="font-bold px-3 py-1 rounded-full text-xs"></span></p>
+            </div>
+
+            <!-- PERFECTED: Signature displays seamlessly across light/dark modes! -->
+            <div id="modal-signature-container" class="hidden mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700">
+                <p class="font-bold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-widest mb-2">Digital Signature</p>
+                <div class="bg-gray-100 dark:bg-slate-800 p-2 rounded-xl border border-gray-200 dark:border-gray-700 inline-block">
+                    <img id="modal-signature-img" class="h-20 object-contain dark:invert" src="" alt="Patient Signature">
+                </div>
             </div>
 
         </div>
@@ -178,7 +182,6 @@
         document.getElementById('empty-state').style.display = (visibleCount === 0) ? '' : 'none';
     }
 
-    // Helper to generate stars dynamically
     function getStarsHTML(score) {
         let html = '';
         const count = parseInt(score) || 0;
@@ -219,12 +222,22 @@
         const plaints = btn.getAttribute('data-complaints');
         document.getElementById('modal-complaints').innerText = (plaints && plaints !== 'None' && plaints.trim() !== '') ? plaints : 'None';
 
-        // Load all 5 star ratings
         document.getElementById('modal-r1').innerHTML = getStarsHTML(btn.getAttribute('data-r1'));
         document.getElementById('modal-r2').innerHTML = getStarsHTML(btn.getAttribute('data-r2'));
         document.getElementById('modal-r3').innerHTML = getStarsHTML(btn.getAttribute('data-r3'));
         document.getElementById('modal-r4').innerHTML = getStarsHTML(btn.getAttribute('data-r4'));
         document.getElementById('modal-r5').innerHTML = getStarsHTML(btn.getAttribute('data-r5'));
+
+        // Handle Signature display securely
+        const sig = btn.getAttribute('data-sig');
+        const sigContainer = document.getElementById('modal-signature-container');
+        const sigImg = document.getElementById('modal-signature-img');
+        if (sig && sig !== 'None' && sig.startsWith('data:image')) {
+            sigImg.src = sig;
+            sigContainer.classList.remove('hidden');
+        } else {
+            sigContainer.classList.add('hidden');
+        }
 
         document.getElementById('viewModal').classList.remove('hidden');
     }
