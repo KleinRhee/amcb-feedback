@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AMC-B Feedback</title>
     
-    <!-- FIX: This tells the browser to use your logo as the Tab Icon! -->
     <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- (Keep the rest of your script and style tags exactly the same below here) -->
     <script>
         tailwind.config = {
             darkMode: 'class', 
@@ -35,6 +32,11 @@
     </script>
     <style>
         * { -webkit-tap-highlight-color: transparent; }
+        
+        /* PERFECTED: Force native browser inputs (like Calendars) to strictly match the App Theme */
+        :root { color-scheme: light; }
+        :root.dark { color-scheme: dark; }
+
         body { transition: background-color 0.3s ease, color 0.3s ease; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
@@ -49,12 +51,11 @@
         .bg-grid { background-image: radial-gradient(rgba(0, 75, 114, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
         .dark .bg-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
 
-        /* PERFECTED: Force the Native Calendar Icon to invert in Dark Mode */
-        .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(90%); cursor: pointer; }
+        /* PERFECTED: Tooltip Alignment. Placed safely under z-index so the browser doesn't block the tooltip */
+        .hidden-req { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); opacity: 0; z-index: -1; width: 1px; height: 1px; }
 
-        /* PERFECTED: Star Validation Anchor */
         .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; position: relative; }
-        .star-rating input { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+        .star-rating input { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); opacity: 0; z-index: -1; width: 1px; height: 1px; }
         .star-rating label { color: #d1d5db; cursor: pointer; transition: color 0.2s ease-in-out; }
         .dark .star-rating label { color: #475569; }
         .star-rating label:hover, .star-rating label:hover ~ label { color: #f2a900; }
@@ -83,8 +84,12 @@
     </div>
 
     <button id="theme-toggle" class="fixed bottom-6 right-6 z-50 glass-panel rounded-full p-4 btn-premium text-gray-600 dark:text-gray-300">
+        <!-- Moon Icon -->
         <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>
-        <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+        <!-- Sun Icon -->
+        <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
     </button>
 
     <main class="flex-grow flex flex-col justify-center items-center p-4 z-10 w-full animate-slide-down">
