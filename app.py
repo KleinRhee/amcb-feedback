@@ -46,7 +46,7 @@ def init_db():
 
 init_db()
 
-IN_PATIENT_DEPARTMENTS = ["PCU 1", "PCU 2", "PCU 3", "PCU 4", "PCU 5", "ICU", "LR/DR", "NIICU"]
+IN_PATIENT_DEPARTMENTS = ["ER", "HPC", "ICU", "IM-OPD", "ISOLATION", "LR/DR", "NICU", "OPD", "OR", "PCU1", "PCU2", "PCU3A", "PCU3B", "PCU4A", "PCU4B", "PCU5A", "PCU5B", "PICU", "PT/REHAB", "RCU"]
 OUT_PATIENT_DEPARTMENTS = ["Accounting", "Auxiliary", "Clinical Laboratory", "Diagnostic & Imaging Services", "Emergency Room", "Engineering and Maintenance", "Finance", "Food Industry", "Health Information Management", "HPC", "Housekeeping", "Human Resource", "Information Technology Services", "Marketing", "Nutribites", "Operating Room", "Outpatient Health & Wellness Hub", "Patient Business", "Pharmacy", "PT Rehab", "QC", "Renal Care", "Supply Management Office"]
 RATING_QUESTIONS = ["Staff demonstrated honesty and professionalism", "Staff showed empathy, care, and respect.", "Concerns were handled responsibly and promptly.", "Needs were attended to efficiently", "Overall satisfaction with service received."]
 
