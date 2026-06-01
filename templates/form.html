@@ -13,10 +13,8 @@
     </div>
 
     <div class="p-6 md:p-8">
-        
         <div class="mb-8 text-left border-b border-gray-200 dark:border-slate-700 pb-8">
             <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-tight mb-5">{{ form_type | replace('-', ' ') | title }} <br><span class="text-amcprimary dark:text-amcteal">Feedback Form</span></h1>
-            
             <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium max-w-prose">
                 Thank you for choosing <strong class="font-bold text-gray-900 dark:text-white">Adventist Medical Center–Bacolod</strong> as your healthcare provider. 
                 Your comfort and satisfaction through our customer-oriented service is one of our top priority during your 
@@ -45,11 +43,10 @@
             <div class="p-5 bg-gradient-to-br from-amcprimary/5 to-transparent dark:from-slate-800 dark:to-slate-900 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 space-y-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <!-- PERFECTED: Inline style removed so Calendar perfectly obeys CSS Root Theme -->
                         <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">
                             {% if form_type == 'in-patient' %}Date of Admission{% else %}Date of Visit{% endif %} <span class="text-red-500">*</span>
                         </label>
-                        <input type="date" name="date_admission" required class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium">
+                        <input type="date" name="date_admission" required class="w-full p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amcprimary outline-none transition-all shadow-sm text-gray-900 dark:text-white font-medium" style="color-scheme: dark light;">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-800 dark:text-gray-200 mb-2">Department <span class="text-red-500">*</span></label>
@@ -133,18 +130,10 @@
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
                 <label class="block text-base font-bold text-gray-800 dark:text-gray-200 mb-4 w-full">Would you recommend AMC-B? <span class="text-red-500">*</span></label>
                 <div class="relative w-full flex flex-col md:flex-row gap-4">
-                    
-                    <!-- PERFECTED: Hidden inputs are now fully compliant and center-anchored for the tooltip -->
                     <input type="radio" id="rec_yes" name="recommend" value="Yes" required class="peer/yes hidden-req">
                     <input type="radio" id="rec_no" name="recommend" value="No" required class="peer/no hidden-req">
-                    
-                    <label for="rec_yes" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/yes:!border-amcteal peer-checked/yes:!bg-amcteal/10 peer-checked/yes:!text-amcteal active:scale-95">
-                        Yes, absolutely
-                    </label>
-
-                    <label for="rec_no" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/no:!border-red-500 peer-checked/no:!bg-red-50 dark:peer-checked/no:!bg-red-900/20 peer-checked/no:!text-red-500 active:scale-95">
-                        No
-                    </label>
+                    <label for="rec_yes" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/yes:!border-amcteal peer-checked/yes:!bg-amcteal/10 peer-checked/yes:!text-amcteal active:scale-95">Yes, absolutely</label>
+                    <label for="rec_no" class="relative select-none flex-1 cursor-pointer w-full min-h-[3.5rem] flex items-center justify-center py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-sm leading-tight transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50 peer-checked/no:!border-red-500 peer-checked/no:!bg-red-50 dark:peer-checked/no:!bg-red-900/20 peer-checked/no:!text-red-500 active:scale-95">No</label>
                 </div>
             </div>
 
@@ -157,8 +146,7 @@
                     {% set sources = ["Newspaper", "Signages", "TV / Radio", "Social Media", "Website", "Friends / Relative", "Events", "Other"] %}
                     {% for src in sources %}
                     <label class="relative cursor-pointer h-full block">
-                        <!-- Removed hidden-req since checkboxes are optional, no validation bubble needed -->
-                        <input type="checkbox" name="source[]" value="{{ src }}" class="peer sr-only">
+                        <input type="checkbox" name="source[]" value="{{ src }}" class="peer hidden-req outline-none focus:ring-0 appearance-none">
                         <div class="select-none w-full h-full min-h-[3.5rem] flex items-center justify-center px-2 py-3 text-center rounded-xl border border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 font-bold text-[13px] sm:text-sm leading-tight peer-checked:!border-amcprimary peer-checked:!bg-amcprimary peer-checked:!text-white active:scale-95 transition-all shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700/50">
                             <span class="whitespace-normal break-words">{{ src }}</span>
                         </div>
@@ -167,15 +155,29 @@
                 </div>
             </div>
 
+            <!-- DPA COMPLIANT CONSENT CHECKBOX -->
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
+                <label class="flex items-start space-x-3 cursor-pointer group">
+                    <div class="flex-shrink-0 mt-1">
+                        <!-- HCI: Explicit Checkbox for Legal Consent -->
+                        <input type="checkbox" name="dpa_consent" required class="w-5 h-5 accent-amcprimary bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 rounded cursor-pointer transition-all shadow-sm">
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
+                        I consent to the collection and processing of my personal information by <strong class="text-gray-900 dark:text-white">Adventist Medical Center–Bacolod</strong> for service evaluation, in compliance with the 
+                        <button type="button" onclick="document.getElementById('dpaModal').classList.remove('hidden')" class="text-amcprimary dark:text-amcteal underline font-bold hover:text-amcorange transition-colors focus:outline-none">Data Privacy Act of 2012 (RA 10173)</button>. <span class="text-red-500">*</span>
+                    </div>
+                </label>
+            </div>
+
+            <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left mt-6">
                 <div class="mb-4 flex justify-between items-end">
                     <div>
                         <label class="block text-base font-bold text-gray-800 dark:text-gray-200">Digital Signature <span class="text-red-500">*</span></label>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">Please sign inside the box below to confirm your feedback.</p>
                     </div>
-                    <button type="button" id="clear-signature" class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full hover:bg-red-100 transition-colors btn-premium">Clear</button>
+                    <button type="button" id="clear-signature" class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-full hover:bg-red-100 transition-colors btn-premium shadow-sm border border-red-200/50 dark:border-red-900/30">Clear Pad</button>
                 </div>
-                <div class="w-full bg-white dark:bg-slate-900 border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-2xl overflow-hidden relative shadow-inner touch-none" style="height: 200px;">
+                <div class="w-full bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-2xl overflow-hidden relative shadow-inner touch-none" style="height: 200px;">
                     <canvas id="signature-pad" class="absolute inset-0 w-full h-full dark:invert"></canvas>
                 </div>
                 <p id="sig-error" class="hidden text-xs font-bold text-red-500 mt-2 animate-pulse">A signature is required to submit this form.</p>
@@ -189,6 +191,40 @@
     </div>
 </div>
 
+<!-- DATA PRIVACY FULL TEXT MODAL -->
+<div id="dpaModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 text-left">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="document.getElementById('dpaModal').classList.add('hidden')"></div>
+    <div class="bg-white dark:bg-darkcard rounded-3xl p-6 md:p-8 max-w-lg w-full relative z-10 shadow-2xl border border-gray-200 dark:border-gray-700 animate-slide-down max-h-[90vh] flex flex-col">
+        
+        <div class="flex justify-between items-start mb-4 border-b border-gray-200 dark:border-gray-700 pb-4 flex-shrink-0">
+            <div>
+                <h3 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white tracking-tight">Data Privacy Notice</h3>
+                <p class="text-xs font-bold text-amcprimary dark:text-amcteal mt-1 uppercase tracking-widest">Republic Act No. 10173</p>
+            </div>
+            <button onclick="document.getElementById('dpaModal').classList.add('hidden')" class="bg-gray-100 dark:bg-gray-800 p-2 rounded-full text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors focus:outline-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <div class="overflow-y-auto pr-2 space-y-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium mb-6">
+            <p>At <strong class="text-gray-900 dark:text-white">Adventist Medical Center - Bacolod (AMC-B)</strong>, we are committed to protecting your personal and sensitive information in accordance with the Data Privacy Act of 2012.</p>
+            
+            <p><strong class="text-gray-800 dark:text-gray-200 block mb-1">1. Purpose of Collection</strong>
+            The information collected in this form (including your name, contact details, and feedback) will be used exclusively by the Hospital Administration and IT Services Department to evaluate, address, and improve the quality of our healthcare services.</p>
+            
+            <p><strong class="text-gray-800 dark:text-gray-200 block mb-1">2. Data Security & Protection</strong>
+            Your responses are encrypted and stored in a highly secured internal database. Access is strictly limited to authorized hospital personnel. Your data will never be sold, published, or shared with external third parties without your explicit written consent.</p>
+            
+            <p><strong class="text-gray-800 dark:text-gray-200 block mb-1">3. Data Retention</strong>
+            Feedback records will be retained only for as long as necessary to fulfill the stated purpose, after which they will be permanently and securely disposed of from our systems.</p>
+            
+            <p>By ticking the consent box and signing this form, you acknowledge that you have read and understood this privacy notice and explicitly authorize AMC-B to process your feedback data.</p>
+        </div>
+
+        <button onclick="document.getElementById('dpaModal').classList.add('hidden')" class="w-full bg-amcprimary text-white font-bold py-3.5 rounded-xl btn-premium shadow-lg flex-shrink-0">I Understand</button>
+    </div>
+</div>
+
 <script>
     const formType = document.getElementById('form_type').value;
     
@@ -197,26 +233,9 @@
         const roomSelect = document.getElementById('room_number');
 
         const roomData = {
-            "ER": ["HR-DELUXE", "HR-INTENSIVE CARE", "HR-LARGE PRIVATE", "HR-REGULAR PRIVATE", "HR-SUITE", "HR-WARD", "ER", "ER Holding Room 1", "ER-OP", "ER-PAS"],
-            "HPC": ["HPC-OP", "BT", "CHEMO"],
-            "ICU": ["M", "ICU PRIVATE A", "ICU PRIVATE B", "ICU PRIVATE C", "ICU PRIVATE D", "ICU PRIVATE E", "ICU PRIVATE F", "ICU PRIVATE G", "ICU WARD", "ICU-OPD"],
-            "IM-OPD": ["IM OP"],
-            "ISOLATION": ["ISO-ER", "ISO-HR", "ISO-OPD"],
-            "LR/DR": ["LABOR ROOM", "LABOR ROOM INTENSIVE", "LABOR ROOM ISOLATION", "LABOR ROOM PRETERM", "LR-ER", "MU-ER", "MU-OP", "2W04", "2W06", "2W07", "2W08"],
-            "NICU": ["NICU A", "NICU B", "NICU C", "NICU D", "NICU HR"],
-            "OPD": ["OP"],
-            "OR": ["OR"],
-            "PCU1": ["2N01", "2N02", "2N03", "2N04", "2N05", "2N06", "2N07", "2N08", "2N09", "2N10", "2N11", "2N12", "2N14", "2N16"],
-            "PCU2": ["2S01", "2S02", "2S03", "2S04", "2S05", "2S06", "2S07", "2S08", "2S09", "2S10", "2S11", "2S12", "2S16", "2S18", "2S19", "2S20", "2S21", "2S22", "2W03"],
-            "PCU3A": ["2E01", "2E02", "2E03", "2E04", "2E05", "2E06", "2E07", "2E08", "2E09", "2E10", "2E11", "2E12", "2E14", "2E15", "2E16", "2E17", "2E18"],
-            "PCU3B": ["2E19", "2E20", "2E21", "2E23", "2E25", "2S17"],
-            "PCU4A": ["2G01", "4W01", "4W02", "4W03", "4W04", "4W05", "4W07", "4W08", "4W09", "4W10", "4W12", "4W14", "4W15", "4W16", "4W17", "4W18", "4W19", "4W20", "4W21", "4W22"],
-            "PCU4B": ["4W23", "4W24", "4W25", "4W27", "4W28", "4W30", "4W31", "4W32", "1N19"],
-            "PCU5A": ["5W01", "5W02", "5W04", "5W05", "5W06", "5W08", "5W09", "5W10", "5W11", "5W12", "5W14"],
-            "PCU5B": ["5W15", "5W16", "5W17", "5W18", "5W19", "5W21", "5W23", "5W24", "5W25", "5W26"],
-            "PICU": ["PICU"],
-            "PT/REHAB": ["PT"],
-            "RCU": ["RCU IS0", "RCU PRIVATE", "RCU SPECIAL", "RCU WARD", "RCU-ER"]
+            "PCU 4": ["4W01", "4W02", "4W03", "4W04"],
+            "PCU 1": ["TBA"], "PCU 2": ["TBA"], "PCU 3": ["TBA"], "PCU 5": ["TBA"],
+            "ICU": ["TBA"], "LR/DR": ["TBA"], "NIICU": ["TBA"]
         };
 
         deptSelect.addEventListener('change', function() {
