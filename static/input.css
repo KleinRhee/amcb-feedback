@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    * { -webkit-tap-highlight-color: transparent; }
+    :root { color-scheme: light; }
+    :root.dark { color-scheme: dark; }
+    body { transition: background-color 0.3s ease, color 0.3s ease; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    .dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(90%); cursor: pointer; }
+}
+
+@layer components {
+    .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+    .dark .glass-panel { background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .btn-premium { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-premium:active { transform: scale(0.96); box-shadow: inset 0 4px 6px rgba(0,0,0,0.2); }
+    .bg-grid { background-image: radial-gradient(rgba(0, 75, 114, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+    .dark .bg-grid { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); }
+    
+    .hidden-req { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); opacity: 0; z-index: -1; width: 1px; height: 1px; }
+    .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 0.5rem; position: relative; }
+    .star-rating input { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); opacity: 0; z-index: -1; width: 1px; height: 1px; }
+    .star-rating label { color: #d1d5db; cursor: pointer; transition: color 0.2s ease-in-out; }
+    .dark .star-rating label { color: #475569; }
+    .star-rating label:hover, .star-rating label:hover ~ label { color: #f2a900; }
+    .star-rating input:checked ~ label { color: #f2a900; }
+}
