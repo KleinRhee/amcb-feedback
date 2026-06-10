@@ -2,7 +2,6 @@
 {% block content %}
 <div class="w-full max-w-2xl glass-panel rounded-3xl overflow-hidden shadow-2xl transition-colors border border-gray-200 dark:border-gray-800">
     
-    <!-- HIGH VISIBILITY BACK BUTTON -->
     <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-black/40 backdrop-blur-sm">
         <a href="/dashboard" class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-bold rounded-full hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-md border border-gray-200 dark:border-slate-700 active:scale-95">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg> 
@@ -20,23 +19,19 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Manage IT staff accounts and database records.</p>
         </div>
 
-        <!-- PERFECTED: Mobile-Responsive Data Management Button -->
         <a href="/manage_records" class="flex items-center gap-4 bg-gradient-to-r from-amcteal to-[#00a8b3] text-white p-5 md:p-6 rounded-2xl shadow-lg hover:shadow-amcteal/40 active:scale-95 transition-all group border border-amcteal/50">
             <div class="bg-white/20 p-3 rounded-full flex-shrink-0">
-                <!-- Database Icon -->
                 <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
             </div>
             <div class="flex-grow">
                 <h3 class="text-lg md:text-xl font-black mb-1">Manage Feedback Records</h3>
                 <p class="text-xs md:text-sm text-white/80 font-medium leading-snug">Archive bad data or permanently delete fake responses.</p>
             </div>
-            <!-- iOS Right Chevron -->
             <div class="flex-shrink-0 bg-white/10 p-2 rounded-full group-hover:bg-white/20 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </div>
         </a>
 
-        <!-- USER MANAGEMENT -->
         <div class="bg-gray-50/50 dark:bg-black/20 border border-gray-200/50 dark:border-gray-800/50 rounded-2xl p-6 text-left shadow-sm">
             <h3 class="text-lg font-black text-gray-900 dark:text-white mb-4">Add IT Staff Account</h3>
             <form method="POST" action="/add_user" class="flex flex-col md:flex-row gap-3">
@@ -93,4 +88,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    // HCI Fix: Teleport modal directly to body to prevent scroll trapping
+    document.body.appendChild(document.getElementById('resetModal'));
+</script>
 {% endblock %}

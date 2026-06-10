@@ -159,12 +159,12 @@
             <div class="pt-8 border-t border-gray-200 dark:border-gray-700 text-left">
                 <label class="flex items-start space-x-3 cursor-pointer group">
                     <div class="flex-shrink-0 mt-1">
-                        <!-- HCI: Explicit Checkbox for Legal Consent -->
                         <input type="checkbox" name="dpa_consent" required class="w-5 h-5 accent-amcprimary bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-600 rounded cursor-pointer transition-all shadow-sm">
                     </div>
                     <div class="text-sm text-gray-600 dark:text-gray-300 font-medium leading-relaxed">
                         I consent to the collection and processing of my personal information by <strong class="text-gray-900 dark:text-white">Adventist Medical Center–Bacolod</strong> for service evaluation, in compliance with the 
-                        <button type="button" onclick="document.getElementById('dpaModal').classList.remove('hidden')" class="text-amcprimary dark:text-amcteal underline font-bold hover:text-amcorange transition-colors focus:outline-none">Data Privacy Act of 2012 (RA 10173)</button>. <span class="text-red-500">*</span>
+                        <!-- Modified: Added type="button" and explicitly prevented default click behavior to stop the checkbox from unchecking when the link is clicked -->
+                        <button type="button" onclick="event.preventDefault(); document.getElementById('dpaModal').classList.remove('hidden');" class="text-amcprimary dark:text-amcteal underline font-bold hover:text-amcorange transition-colors focus:outline-none">Data Privacy Act of 2012 (RA 10173)</button>. <span class="text-red-500">*</span>
                     </div>
                 </label>
             </div>
@@ -226,6 +226,9 @@
 </div>
 
 <script>
+    // PERFECTED HCI FIX: Teleport the DPA Modal outside the container to prevent scrolling bugs
+    document.body.appendChild(document.getElementById('dpaModal'));
+
     const formType = document.getElementById('form_type').value;
     
     if (formType === 'in-patient') {
@@ -233,9 +236,26 @@
         const roomSelect = document.getElementById('room_number');
 
         const roomData = {
-            "PCU 4": ["4W01", "4W02", "4W03", "4W04"],
-            "PCU 1": ["TBA"], "PCU 2": ["TBA"], "PCU 3": ["TBA"], "PCU 5": ["TBA"],
-            "ICU": ["TBA"], "LR/DR": ["TBA"], "NIICU": ["TBA"]
+            "ER": ["HR-DELUXE", "HR-INTENSIVE CARE", "HR-LARGE PRIVATE", "HR-REGULAR PRIVATE", "HR-SUITE", "HR-WARD", "ER", "ER Holding Room 1", "ER-OP", "ER-PAS"],
+            "HPC": ["HPC-OP", "BT", "CHEMO"],
+            "ICU": ["M", "ICU PRIVATE A", "ICU PRIVATE B", "ICU PRIVATE C", "ICU PRIVATE D", "ICU PRIVATE E", "ICU PRIVATE F", "ICU PRIVATE G", "ICU WARD", "ICU-OPD"],
+            "IM-OPD": ["IM OP"],
+            "ISOLATION": ["ISO-ER", "ISO-HR", "ISO-OPD"],
+            "LR/DR": ["LABOR ROOM", "LABOR ROOM INTENSIVE", "LABOR ROOM ISOLATION", "LABOR ROOM PRETERM", "LR-ER", "MU-ER", "MU-OP", "2W04", "2W06", "2W07", "2W08"],
+            "NICU": ["NICU A", "NICU B", "NICU C", "NICU D", "NICU HR"],
+            "OPD": ["OP"],
+            "OR": ["OR"],
+            "PCU1": ["2N01", "2N02", "2N03", "2N04", "2N05", "2N06", "2N07", "2N08", "2N09", "2N10", "2N11", "2N12", "2N14", "2N16"],
+            "PCU2": ["2S01", "2S02", "2S03", "2S04", "2S05", "2S06", "2S07", "2S08", "2S09", "2S10", "2S11", "2S12", "2S16", "2S18", "2S19", "2S20", "2S21", "2S22", "2W03"],
+            "PCU3A": ["2E01", "2E02", "2E03", "2E04", "2E05", "2E06", "2E07", "2E08", "2E09", "2E10", "2E11", "2E12", "2E14", "2E15", "2E16", "2E17", "2E18"],
+            "PCU3B": ["2E19", "2E20", "2E21", "2E23", "2E25", "2S17"],
+            "PCU4A": ["2G01", "4W01", "4W02", "4W03", "4W04", "4W05", "4W07", "4W08", "4W09", "4W10", "4W12", "4W14", "4W15", "4W16", "4W17", "4W18", "4W19", "4W20", "4W21", "4W22"],
+            "PCU4B": ["4W23", "4W24", "4W25", "4W27", "4W28", "4W30", "4W31", "4W32", "1N19"],
+            "PCU5A": ["5W01", "5W02", "5W04", "5W05", "5W06", "5W08", "5W09", "5W10", "5W11", "5W12", "5W14"],
+            "PCU5B": ["5W15", "5W16", "5W17", "5W18", "5W19", "5W21", "5W23", "5W24", "5W25", "5W26"],
+            "PICU": ["PICU"],
+            "PT/REHAB": ["PT"],
+            "RCU": ["RCU IS0", "RCU PRIVATE", "RCU SPECIAL", "RCU WARD", "RCU-ER"]
         };
 
         deptSelect.addEventListener('change', function() {
